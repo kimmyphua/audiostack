@@ -1,0 +1,27 @@
+FROM node:24-alpine
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apk add --no-cache openssl
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies (including dev dependencies for nodemon)
+RUN npm install
+
+# Copy source code
+COPY . .
+
+# Create uploads directory
+RUN mkdir -p uploads
+
+# Generate Prisma client
+RUN npx prisma generate
+
+# Expose port
+EXPOSE 5000
+
+# Start development server with nodemon for hot reload
+CMD ["npx", "nodemon", "src/index.ts"]

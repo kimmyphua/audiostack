@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: audiostack
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+    ports:
+      - '5432:5432'
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - audiostack-network
+
+  backend:
+    build: ./backend
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://postgres:${DB_PASSWORD:-password}@db:5433/audiostack?schema=public
+      JWT_SECRET: ${JWT_SECRET:-your-super-secret-jwt-key-change-this-in-production}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-24h}
+      UPLOAD_DIR: uploads
+      MAX_FILE_SIZE: ${MAX_FILE_SIZE:-104857600}
+      DEFAULT_ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      DEFAULT_ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin123}
+      NODE_ENV: production
+      PORT: 5000
+      FRONTEND_URL: ${FRONTEND_URL:-https://yourdomain.com}
+    ports:
+      - '5001:5000'
+    volumes:
+      - ./backend/uploads:/app/uploads
+    command: ["sh", "-c", "npx prisma generate && npx prisma db push && node dist/index.js"]
+    networks:
+      - audiostack-network
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    depends_on:
+      - backend
+    ports:
+      - '3000:3000'
+    environment:
+      NODE_ENV: production
+    stdin_open: true
+    tty: true
+    networks:
+      - audiostack-network
+    restart: unless-stopped
+
+  # Optional: Add Nginx reverse proxy for production
+  nginx:
+    image: nginx:alpine
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/nginx/ssl
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - audiostack-network
+    restart: unless-stopped
+
+volumes:
+  db_data:
+
+networks:
+  audiostack-network:
+    driver: bridge 

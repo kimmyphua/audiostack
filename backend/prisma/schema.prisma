@@ -1,0 +1,41 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String      @id @default(cuid())
+  username  String      @unique
+  password  String
+  email     String      @unique
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  audioFiles AudioFile[]
+
+  @@map("users")
+}
+
+model AudioFile {
+  id          String   @id @default(cuid())
+  filename    String
+  originalName String
+  description String?
+  category    String
+  filePath    String
+  fileSize    Int
+  mimeType    String
+  duration    Float?
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("audio_files")
+} 
