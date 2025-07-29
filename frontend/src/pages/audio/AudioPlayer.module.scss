@@ -1,4 +1,4 @@
-@use '../styles/globals.scss' as *;
+@use '../../styles/globals.scss' as *;
 
 .container {
   max-width: 64rem;
@@ -10,6 +10,7 @@
 .header {
   @include flex-center;
   gap: $spacing-4;
+  justify-content: flex-start;
   
   .backButton {
     color: $gray-600;
@@ -47,6 +48,8 @@
 .fileInfo {
   border-bottom: 1px solid $gray-200;
   padding-bottom: $spacing-4;
+  @include flex-col;
+  align-items: center;
   
   .fileName {
     font-size: 1.125rem;

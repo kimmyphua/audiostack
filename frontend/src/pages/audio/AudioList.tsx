@@ -1,56 +1,16 @@
 import { Music, Search, Trash2 } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import toast from 'react-hot-toast'
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { audioAPI } from '../lib/api'
+import { useAudioFiles } from './hooks/useAudioFiles'
+import { formatDate, formatFileSize } from '../../utils'
 import styles from './AudioList.module.scss'
 
-interface AudioFile {
-  id: string
-  originalName: string
-  description?: string
-  category: string
-  fileSize: number
-  mimeType: string
-  createdAt: string
-}
-
 export default function AudioList() {
-  const [audioFiles, setAudioFiles] = useState<AudioFile[]>([])
-  const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('')
-  const [categories, setCategories] = useState<string[]>([])
   const navigate = useNavigate()
-
-  useEffect(() => {
-    loadAudioFiles()
-    loadCategories()
-  }, [])
-
-  const loadAudioFiles = async () => {
-    try {
-      const params: any = {}
-      if (search) params.search = search
-      if (category) params.category = category
-      
-      const response = await audioAPI.getMyFiles(params)
-      setAudioFiles(response.data.audioFiles)
-    } catch (error: any) {
-      toast.error('Failed to load audio files')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const loadCategories = async () => {
-    try {
-      const response = await audioAPI.getCategories()
-      setCategories(response.data.categories)
-    } catch (error) {
-      console.error('Failed to load categories')
-    }
-  }
+  
+  const { audioFiles, loading, categories, loadAudioFiles, deleteAudioFile } = useAudioFiles()
 
   const handleRowClick = (fileId: string) => {
     navigate(`/player/${fileId}`)
@@ -60,25 +20,11 @@ export default function AudioList() {
     e.stopPropagation() // Prevent row click from triggering
     if (!confirm('Are you sure you want to delete this audio file?')) return
 
-    try {
-      await audioAPI.deleteFile(id)
-      toast.success('Audio file deleted successfully')
-      loadAudioFiles()
-    } catch (error: any) {
-      toast.error('Failed to delete audio file')
-    }
+    await deleteAudioFile(id)
   }
 
-  const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return '0 Bytes'
-    const k = 1024
-    const sizes = ['Bytes', 'KB', 'MB', 'GB']
-    const i = Math.floor(Math.log(bytes) / Math.log(k))
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
-  }
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString()
+  const handleSearch = () => {
+    loadAudioFiles({ search, category })
   }
 
   if (loading) {
@@ -130,7 +76,7 @@ export default function AudioList() {
             </select>
           </div>
           <button
-            onClick={loadAudioFiles}
+            onClick={handleSearch}
             className="btn-secondary"
           >
             Search

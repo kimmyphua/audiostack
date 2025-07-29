@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import toast from 'react-hot-toast'
-import { useAuth } from '../hooks/useAuth'
+import { API_ENDPOINTS } from '../../constants'
+import { useAuth } from '../../hooks/useAuth'
+import { storage } from '../../utils'
 import styles from './Profile.module.scss'
 
 export default function Profile() {
@@ -29,7 +31,11 @@ export default function Profile() {
     if (!confirm('Are you sure you want to delete your account? This action cannot be undone.')) return
     setDeleting(true)
     try {
-      await fetch(`/api/users/${user?.id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } })
+      const token = storage.get('token')
+      await fetch(API_ENDPOINTS.USERS.PROFILE(user?.id || ''), { 
+        method: 'DELETE', 
+        headers: { Authorization: `Bearer ${token}` } 
+      })
       toast.success('Account deleted successfully!')
       logout()
     } catch (error: any) {

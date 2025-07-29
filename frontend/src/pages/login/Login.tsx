@@ -1,8 +1,9 @@
-import { Eye, EyeOff, Music } from 'lucide-react'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../hooks/useAuth'
+import { Icon } from '../../components/Icon'
+import { DEFAULT_CREDENTIALS } from '../../constants'
+import { useAuth } from '../../hooks'
 import styles from './Login.module.scss'
 
 export default function Login() {
@@ -37,7 +38,7 @@ export default function Login() {
       <div className={styles.formContainer}>
         <div className={styles.header}>
           <div className={styles.iconContainer}>
-            <Music className={styles.icon} />
+            <Icon name="Music" className={styles.icon} />
           </div>
           <h2 className={styles.title}>
             Sign in to AudioStack
@@ -78,9 +79,9 @@ export default function Login() {
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? (
-                  <EyeOff className="h-5 w-5" />
+                  <Icon name="EyeOff" className="h-5 w-5" />
                 ) : (
-                  <Eye className="h-5 w-5" />
+                  <Icon name="Eye" className="h-5 w-5" />
                 )}
               </button>
             </div>
@@ -96,7 +97,7 @@ export default function Login() {
 
           <div className={styles.credentials}>
             <p className={styles.text}>
-              Default credentials: admin / admin123
+              Default credentials: {DEFAULT_CREDENTIALS.username} / {DEFAULT_CREDENTIALS.password}
             </p>
           </div>
         </form>

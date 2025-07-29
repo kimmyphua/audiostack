@@ -4,16 +4,14 @@ import { Toaster } from 'react-hot-toast'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { BrowserRouter } from 'react-router-dom'
 import App from './App.tsx'
+import { QUERY_CONFIG, TOAST_CONFIG } from './constants'
 import { AuthProvider } from './hooks/useAuth'
 import './index.css'
 import './styles/globals.scss'
 
 const queryClient = new QueryClient({
   defaultOptions: {
-    queries: {
-      retry: 1,
-      refetchOnWindowFocus: false,
-    },
+    queries: QUERY_CONFIG,
   },
 })
 
@@ -25,13 +23,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <App />
         </AuthProvider>
         <Toaster
-          position="top-right"
+          position={TOAST_CONFIG.position}
           toastOptions={{
-            duration: 4000,
-            style: {
-              background: '#363636',
-              color: '#fff',
-            },
+            duration: TOAST_CONFIG.duration,
+            style: TOAST_CONFIG.style,
           }}
         />
       </BrowserRouter>

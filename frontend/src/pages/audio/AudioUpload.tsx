@@ -1,72 +1,21 @@
 import { Music, Upload } from 'lucide-react'
-import { useState } from 'react'
-import toast from 'react-hot-toast'
-import { useNavigate } from 'react-router-dom'
-import { audioAPI } from '../lib/api'
+import { AUDIO_CATEGORIES, MAX_FILE_SIZE_MB, SUPPORTED_AUDIO_FORMATS } from '../../constants'
+import { useFileUpload } from '../../hooks'
+import { formatFileSize } from '../../utils'
 import styles from './AudioUpload.module.scss'
 
-const AUDIO_CATEGORIES = [
-  'Music',
-  'Podcast',
-  'Audiobook',
-  'Sound Effect',
-  'Voice Recording',
-  'Interview',
-  'Lecture',
-  'Other'
-]
-
 export default function AudioUpload() {
-  const [file, setFile] = useState<File | null>(null)
-  const [description, setDescription] = useState('')
-  const [category, setCategory] = useState('Music')
-  const [uploading, setUploading] = useState(false)
-  const navigate = useNavigate()
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0]
-    if (selectedFile) {
-      setFile(selectedFile)
-    }
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!file) {
-      toast.error('Please select an audio file')
-      return
-    }
-
-    if (file.size > 25 * 1024 * 1024) { // 25MB
-      toast.error('File size must be less than 25MB')
-      return
-    }
-
-    setUploading(true)
-    const formData = new FormData()
-    formData.append('audio', file, file.name)
-    formData.append('description', description)
-    formData.append('category', category)
-    
-    // Log the actual data being sent
-    console.log('File:', file.name, file.size, file.type)
-    console.log('Description:', description)
-    console.log('Category:', category)
-    
-    // Log FormData entries
-    for (let [key, value] of formData.entries()) {
-      console.log(`${key}:`, value)
-    }
-    try {
-      await audioAPI.upload(formData)
-      toast.success('Audio file uploaded successfully!')
-      navigate('/files')
-    } catch (error: any) {
-      toast.error(error.response?.data?.error || 'Upload failed')
-    } finally {
-      setUploading(false)
-    }
-  }
+  const {
+    file,
+    description,
+    category,
+    uploading,
+    setDescription,
+    setCategory,
+    handleFileChange,
+    handleSubmit,
+    removeFile,
+  } = useFileUpload()
 
   return (
     <div className={styles.container}>
@@ -87,7 +36,7 @@ export default function AudioUpload() {
               <div className={styles.dropzone}>
                 <input
                   type="file"
-                  accept="audio/*,video/*"
+                  accept={SUPPORTED_AUDIO_FORMATS.join(',')}
                   onChange={handleFileChange}
                   className={styles.input}
                   id="audio-file"
@@ -98,13 +47,13 @@ export default function AudioUpload() {
                       <Music className={styles.icon} />
                       <p className={styles.fileName}>{file.name}</p>
                       <p className={styles.fileSize}>
-                        {(file.size / 1024 / 1024).toFixed(2)} MB
+                        {formatFileSize(file.size)}
                       </p>
                       <button
                         type="button"
                         onClick={(e) => {
                           e.preventDefault()
-                          setFile(null)
+                          removeFile()
                         }}
                         className={styles.removeButton}
                       >
@@ -118,7 +67,7 @@ export default function AudioUpload() {
                         Click to select audio file
                       </p>
                       <p className={styles.description}>
-                        MP3, WAV, OGG, AAC, FLAC, MP4, WEBM up to 25MB
+                        MP3, WAV, OGG, AAC, FLAC, MP4, WEBM up to {MAX_FILE_SIZE_MB}MB
                       </p>
                     </div>
                   )}
@@ -163,7 +112,7 @@ export default function AudioUpload() {
         <div className={styles.actions}>
           <button
             type="button"
-            onClick={() => navigate('/files')}
+            onClick={() => window.history.back()}
             className="btn-secondary"
           >
             Cancel

@@ -1,4 +1,4 @@
-@use '../styles/globals.scss' as *;
+@use '../../styles/globals.scss' as *;
 
 .container {
   min-height: 100vh;
@@ -71,30 +71,23 @@
   gap: $spacing-6;
 }
 
-.inputGroup {
+.formGroup {
   @include flex-col;
-  gap: 0;
-  border-radius: $border-radius;
-  box-shadow: $shadow;
+  gap: $spacing-4;
+}
+
+.inputGroup {
+  .label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: $gray-700;
+    margin-bottom: $spacing-1;
+  }
   
   .input {
-    border-radius: 0;
-    border: 1px solid $gray-300;
-    
-    &:first-child {
-      border-top-left-radius: $border-radius;
-      border-top-right-radius: $border-radius;
-    }
-    
-    &:last-child {
-      border-bottom-left-radius: $border-radius;
-      border-bottom-right-radius: $border-radius;
-    }
-    
-    &:focus {
-      border-color: $primary-500;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    }
+    @extend .input;
+    margin-top: $spacing-1;
   }
 }
 
@@ -120,13 +113,4 @@
   width: 100%;
   @include flex-center;
   padding: $spacing-2 $spacing-4;
-}
-
-.credentials {
-  text-align: center;
-  
-  .text {
-    font-size: 0.875rem;
-    color: $gray-600;
-  }
 } 

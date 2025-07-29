@@ -1,40 +1,29 @@
 import { ArrowLeft, Pause, Play, Volume2 } from 'lucide-react'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { Link, useParams } from 'react-router-dom'
-import { audioAPI } from '../lib/api'
+import { useAudioPlayer } from '../../hooks'
+import { audioAPI } from '../../lib/api'
+import { AudioFile } from '../../types'
+import { formatFileSize, formatTime, getStreamUrl } from '../../utils'
 import styles from './AudioPlayer.module.scss'
-
-// Get API base URL for streaming
-const getStreamUrl = (id: string) => {
-  const token = localStorage.getItem('token')
-  const baseUrl = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1'
-    ? `/api/audio/${id}/file`
-    : `http://localhost:5001/api/audio/${id}/file`
-  
-  return `${baseUrl}?token=${token}`
-}
-
-interface AudioFile {
-  id: string
-  originalName: string
-  description?: string
-  category: string
-  fileSize: number
-  mimeType: string
-  createdAt: string
-}
 
 export default function AudioPlayer() {
   const { id } = useParams<{ id: string }>()
   const [audioFile, setAudioFile] = useState<AudioFile | null>(null)
   const [loading, setLoading] = useState(true)
-  const [playing, setPlaying] = useState(false)
-  const [currentTime, setCurrentTime] = useState(0)
-  const [duration, setDuration] = useState(0)
-  const [volume, setVolume] = useState(1)
-  const audioRef = useRef<HTMLAudioElement>(null)
   const [audioUrl, setAudioUrl] = useState<string | null>(null)
+
+  const {
+    audioRef,
+    state: { playing, currentTime, duration, volume },
+    togglePlay,
+    handleTimeUpdate,
+    handleLoadedMetadata,
+    handleSeek,
+    handleVolumeChange,
+    handleEnded,
+  } = useAudioPlayer(audioUrl)
 
   useEffect(() => {
     if (id) {
@@ -52,11 +41,9 @@ export default function AudioPlayer() {
     try {
       const response = await audioAPI.getFile(id!)
       setAudioFile(response.data.audioFile)
-      // console.log('Audio file loaded:', response.data.audioFile)
       
       // Fetch the audio file as a blob
       const fileUrl = getStreamUrl(id!)
-      // console.log('Fetching audio file as blob from:', fileUrl)
       
       const audioResponse = await fetch(fileUrl)
       if (!audioResponse.ok) {
@@ -70,67 +57,21 @@ export default function AudioPlayer() {
       setAudioUrl(blobUrl)
       
     } catch (error: any) {
-      toast.error(`Failed to load audio file: ${error.response.data.error}`)
+      toast.error(`Failed to load audio file: ${error.response?.data?.error}`)
       console.error('Load audio file error:', error)
     } finally {
       setLoading(false)
     }
   }, [id])
 
-  const togglePlay = () => {
-    if (audioRef.current) {
-      if (playing) {
-        audioRef.current.pause()
-      } else {
-        audioRef.current.play().catch((error) => {
-          console.error('Audio play error:', error)
-          toast.error(`Failed to play audio: ${error.response.data.error}`)
-        })
-      }
-      setPlaying(!playing)
-    }
-  }
-
-  const handleTimeUpdate = () => {
-    if (audioRef.current) {
-      setCurrentTime(audioRef.current.currentTime)
-    }
-  }
-
-  const handleLoadedMetadata = () => {
-    if (audioRef.current) {
-      setDuration(audioRef.current.duration)
-    }
-  }
-
-  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSeekChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const time = parseFloat(e.target.value)
-    if (audioRef.current) {
-      audioRef.current.currentTime = time
-      setCurrentTime(time)
-    }
+    handleSeek(time)
   }
 
-  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleVolumeChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newVolume = parseFloat(e.target.value)
-    setVolume(newVolume)
-    if (audioRef.current) {
-      audioRef.current.volume = newVolume
-    }
-  }
-
-  const formatTime = (time: number) => {
-    const minutes = Math.floor(time / 60)
-    const seconds = Math.floor(time % 60)
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`
-  }
-
-  const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return '0 Bytes'
-    const k = 1024
-    const sizes = ['Bytes', 'KB', 'MB', 'GB']
-    const i = Math.floor(Math.log(bytes) / Math.log(k))
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+    handleVolumeChange(newVolume)
   }
 
   if (loading) {
@@ -195,7 +136,7 @@ export default function AudioPlayer() {
               src={audioUrl || getStreamUrl(id!)}
               onTimeUpdate={handleTimeUpdate}
               onLoadedMetadata={handleLoadedMetadata}
-              onEnded={() => setPlaying(false)}
+              onEnded={handleEnded}
             />
             
             <div className={styles.audioControls}>
@@ -212,7 +153,7 @@ export default function AudioPlayer() {
                   min="0"
                   max={duration || 0}
                   value={currentTime}
-                  onChange={handleSeek}
+                  onChange={handleSeekChange}
                   className={styles.progressBar}
                 />
                 <div className={styles.timeDisplay}>
@@ -229,7 +170,7 @@ export default function AudioPlayer() {
                   max="1"
                   step="0.1"
                   value={volume}
-                  onChange={handleVolumeChange}
+                  onChange={handleVolumeChangeInput}
                   className={styles.volumeSlider}
                 />
               </div>

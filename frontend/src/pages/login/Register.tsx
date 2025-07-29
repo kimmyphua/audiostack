@@ -1,8 +1,8 @@
-import { Eye, EyeOff, Music } from 'lucide-react'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../hooks/useAuth'
+import { Icon } from '../../components/Icon'
+import { useAuth } from '../../hooks/useAuth'
 import styles from './Register.module.scss'
 
 export default function Register() {
@@ -35,7 +35,7 @@ export default function Register() {
       <div className={styles.formContainer}>
         <div className={styles.header}>
           <div className={styles.iconContainer}>
-            <Music className={styles.icon} />
+            <Icon name="Music" className={styles.icon} />
           </div>
           <h2 className={styles.title}>
             Create your account
@@ -100,9 +100,9 @@ export default function Register() {
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
-                    <EyeOff className="h-5 w-5" />
+                    <Icon name="EyeOff" className="h-5 w-5" />
                   ) : (
-                    <Eye className="h-5 w-5" />
+                    <Icon name="Eye" className="h-5 w-5" />
                   )}
                 </button>
               </div>

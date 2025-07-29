@@ -1,29 +1,16 @@
-import {
-  Home,
-  LogOut,
-  Menu,
-  Music,
-  Upload,
-  User,
-  X
-} from 'lucide-react'
 import { useState } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
+import { NAVIGATION_ITEMS } from '../constants'
 import { useAuth } from '../hooks/useAuth'
+import { getInitials } from '../utils'
 import styles from './Layout.module.scss'
+import { Icon } from './Icon'
 
 export default function Layout() {
   const auth = useAuth()
   const { user, logout } = auth || { user: null, logout: () => {} }
   const location = useLocation()
   const [sidebarOpen, setSidebarOpen] = useState(false)
-
-  const navigation = [
-    { name: 'Dashboard', href: '/dashboard', icon: Home },
-    { name: 'Upload Audio', href: '/upload', icon: Upload },
-    { name: 'My Files', href: '/files', icon: Music },
-    { name: 'Profile', href: '/profile', icon: User },
-  ]
 
   const handleLogout = () => {
     logout()
@@ -38,12 +25,12 @@ export default function Layout() {
           <div className={styles.mobileHeader}>
             <h1 className={styles.title}>AudioStack</h1>
             <button onClick={() => setSidebarOpen(false)}>
-              <X className="h-6 w-6" />
+              <Icon name="X" className="h-6 w-6" />
             </button>
           </div>
           <nav className={styles.mobileNav}>
             <div className={styles.navList}>
-              {navigation.map((item) => {
+              {NAVIGATION_ITEMS.map((item) => {
                 const isActive = location.pathname === item.href
                 return (
                   <Link
@@ -52,7 +39,7 @@ export default function Layout() {
                     className={`${styles.navItem} ${isActive ? styles.active : ''}`}
                     onClick={() => setSidebarOpen(false)}
                   >
-                    <item.icon className={styles.icon} />
+                    <Icon name={item.icon as any} className={styles.icon} />
                     {item.name}
                   </Link>
                 )
@@ -64,7 +51,7 @@ export default function Layout() {
               <div className={styles.avatar}>
                 <div className={styles.avatarCircle}>
                   <span className={styles.avatarText}>
-                    {user?.username.charAt(0).toUpperCase()}
+                    {getInitials(user?.username || '')}
                   </span>
                 </div>
               </div>
@@ -76,7 +63,7 @@ export default function Layout() {
               onClick={handleLogout}
               className={styles.logoutButton}
             >
-              <LogOut className={styles.icon} />
+              <Icon name="LogOut" className={styles.icon} />
               Logout
             </button>
           </div>
@@ -90,7 +77,7 @@ export default function Layout() {
         </div>
         <nav className={styles.desktopNav}>
           <div className={styles.navList}>
-            {navigation.map((item) => {
+            {NAVIGATION_ITEMS.map((item) => {
               const isActive = location.pathname === item.href
               return (
                 <Link
@@ -98,7 +85,7 @@ export default function Layout() {
                   to={item.href}
                   className={`${styles.navItem} ${isActive ? styles.active : ''}`}
                 >
-                  <item.icon className={styles.icon} />
+                  <Icon name={item.icon as any} className={styles.icon} />
                   {item.name}
                 </Link>
               )
@@ -110,7 +97,7 @@ export default function Layout() {
             <div className={styles.avatar}>
               <div className={styles.avatarCircle}>
                 <span className={styles.avatarText}>
-                  {user?.username.charAt(0).toUpperCase()}
+                  {getInitials(user?.username || '')}
                 </span>
               </div>
             </div>
@@ -122,7 +109,7 @@ export default function Layout() {
             onClick={handleLogout}
             className={styles.logoutButton}
           >
-            <LogOut className={styles.icon} />
+            <Icon name="LogOut" className={styles.icon} />
             Logout
           </button>
         </div>
@@ -136,7 +123,7 @@ export default function Layout() {
             className={styles.menuButton}
             onClick={() => setSidebarOpen(true)}
           >
-            <Menu className="h-6 w-6" />
+            <Icon name="Menu" className="h-6 w-6" />
           </button>
         </div>
 

@@ -1,13 +1,13 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout'
 import { useAuth } from './hooks/useAuth'
-import AudioList from './pages/AudioList'
-import AudioPlayer from './pages/AudioPlayer'
-import AudioUpload from './pages/AudioUpload'
-import Dashboard from './pages/Dashboard'
-import Login from './pages/Login'
-import Profile from './pages/Profile'
-import Register from './pages/Register'
+import AudioList from './pages/audio/AudioList'
+import AudioPlayer from './pages/audio/AudioPlayer'
+import AudioUpload from './pages/audio/AudioUpload'
+import Dashboard from './pages/dashboard/Dashboard'
+import Login from './pages/login/Login'
+import Register from './pages/login/Register'
+import Profile from './pages/profile/Profile'
 
 function App() {
   const auth = useAuth()
