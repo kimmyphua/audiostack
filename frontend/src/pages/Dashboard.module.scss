@@ -1,0 +1,142 @@
+@use '../styles/globals.scss' as *;
+
+.container {
+  @include flex-col;
+  gap: $spacing-6;
+}
+
+.header {
+  .title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: $gray-900;
+    margin: 0;
+  }
+  
+  .subtitle {
+    margin-top: $spacing-1;
+    font-size: 0.875rem;
+    color: $gray-500;
+  }
+}
+
+.quickActions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-6;
+  
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.actionCard {
+  @extend .card;
+  transition: box-shadow 0.2s ease-in-out;
+  
+  &:hover {
+    box-shadow: $shadow-md;
+  }
+  
+  .actionContent {
+    @include flex-center;
+    
+    .iconContainer {
+      flex-shrink: 0;
+      border-radius: $border-radius;
+      padding: $spacing-3;
+      
+      &.blue {
+        background-color: #3b82f6;
+      }
+      
+      &.green {
+        background-color: #10b981;
+      }
+      
+      &.purple {
+        background-color: #8b5cf6;
+      }
+      
+      .icon {
+        height: 1.5rem;
+        width: 1.5rem;
+        color: white;
+      }
+    }
+    
+    .actionDetails {
+      margin-left: $spacing-4;
+      
+      .actionTitle {
+        font-size: 1.125rem;
+        font-weight: 500;
+        color: $gray-900;
+        margin: 0;
+      }
+      
+      .actionDescription {
+        font-size: 0.875rem;
+        color: $gray-500;
+        margin: 0;
+      }
+    }
+  }
+}
+
+.gettingStarted {
+  @extend .card;
+  
+  .title {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: $gray-900;
+    margin: 0 0 $spacing-4 0;
+  }
+  
+  .steps {
+    @include flex-col;
+    gap: $spacing-4;
+  }
+  
+  .step {
+    @include flex-center;
+    align-items: flex-start;
+    
+    .stepNumber {
+      flex-shrink: 0;
+      
+      .numberCircle {
+        @include flex-center;
+        height: 2rem;
+        width: 2rem;
+        border-radius: $border-radius-full;
+        background-color: $primary-100;
+        
+        .number {
+          font-size: 0.875rem;
+          font-weight: 500;
+          color: $primary-600;
+        }
+      }
+    }
+    
+    .stepContent {
+      margin-left: $spacing-3;
+      
+      .stepText {
+        font-size: 0.875rem;
+        color: $gray-700;
+        margin: 0;
+        
+        .highlight {
+          font-weight: 600;
+        }
+      }
+    }
+  }
+} 

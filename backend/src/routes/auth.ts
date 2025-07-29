@@ -39,7 +39,7 @@ router.post('/login', [
     const token = jwt.sign(
       { userId: user.id, username: user.username },
       process.env.JWT_SECRET!,
-      { expiresIn: '2m' }
+      { expiresIn: '24h' }
     );
 
     const responseData = {

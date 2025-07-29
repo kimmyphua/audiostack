@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { useAuth } from '../hooks/useAuth'
+import styles from './Profile.module.scss'
 
 export default function Profile() {
-  const { user, updateUser, logout } = useAuth()
+  const auth = useAuth()
+  const { user, updateUser, logout } = auth || { user: null, updateUser: async () => {}, logout: () => {} }
   const [username, setUsername] = useState(user?.username || '')
   const [email, setEmail] = useState(user?.email || '')
   const [password, setPassword] = useState('')
@@ -38,16 +40,16 @@ export default function Profile() {
   }
 
   return (
-    <div className="max-w-xl mx-auto">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">My Profile</h1>
-        <p className="mt-1 text-sm text-gray-500">
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h1 className={styles.title}>My Profile</h1>
+        <p className={styles.subtitle}>
           Manage your account information and settings.
         </p>
       </div>
-      <form onSubmit={handleUpdate} className="card space-y-6">
-        <div>
-          <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+      <form onSubmit={handleUpdate} className={styles.form}>
+        <div className={styles.formGroup}>
+          <label htmlFor="username" className={styles.label}>
             Username
           </label>
           <input
@@ -55,39 +57,39 @@ export default function Profile() {
             name="username"
             type="text"
             required
-            className="input mt-1"
+            className={styles.input}
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
         </div>
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+        <div className={styles.formGroup}>
+          <label htmlFor="email" className={styles.label}>
             Email
           </label>
           <input
             id="email"
             name="email"
             type="email"
-            className="input mt-1"
+            className={styles.input}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
-        <div>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+        <div className={styles.formGroup}>
+          <label htmlFor="password" className={styles.label}>
             New Password
           </label>
           <input
             id="password"
             name="password"
             type="password"
-            className="input mt-1"
+            className={styles.input}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Leave blank to keep current password"
           />
         </div>
-        <div className="flex justify-end space-x-3">
+        <div className={styles.actions}>
           <button
             type="button"
             onClick={handleDelete}

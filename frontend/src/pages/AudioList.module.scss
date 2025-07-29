@@ -1,0 +1,206 @@
+@use '../styles/globals.scss' as *;
+
+.container {
+  @include flex-col;
+  gap: $spacing-6;
+}
+
+.header {
+  @include flex-between;
+  
+  .title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: $gray-900;
+    margin: 0;
+  }
+  
+  .subtitle {
+    margin-top: $spacing-1;
+    font-size: 0.875rem;
+    color: $gray-500;
+  }
+}
+
+.searchContainer {
+  @extend .card;
+  
+  .searchForm {
+    @include flex-col;
+    gap: $spacing-4;
+    margin-bottom: $spacing-6;
+    
+    @media (min-width: 640px) {
+      flex-direction: row;
+    }
+  }
+  
+  .searchInput {
+    flex: 1;
+    position: relative;
+    
+    input {
+      padding-left: 2.0rem;
+    }
+    
+    .searchIcon {
+      position: absolute;
+      left: $spacing-3;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 1rem;
+      width: 1rem;
+      color: $gray-400;
+    }
+  }
+  
+  .categorySelect {
+    width: 100%;
+    
+    @media (min-width: 640px) {
+      width: 12rem;
+    }
+  }
+}
+
+.emptyState {
+  text-align: center;
+  padding: $spacing-12 $spacing-4;
+  
+  .icon {
+    margin: 0 auto;
+    height: 3rem;
+    width: 3rem;
+    color: $gray-400;
+  }
+  
+  .title {
+    margin-top: $spacing-2;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: $gray-900;
+  }
+  
+  .description {
+    margin-top: $spacing-1;
+    font-size: 0.875rem;
+    color: $gray-500;
+  }
+  
+  .action {
+    margin-top: $spacing-6;
+  }
+}
+
+.tableContainer {
+  overflow: hidden;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  border-radius: $border-radius-lg;
+  
+  @media (min-width: 768px) {
+    border-radius: $border-radius-lg;
+  }
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  
+  .thead {
+    background-color: $gray-50;
+    
+    .th {
+      padding: $spacing-3 $spacing-6;
+      text-align: left;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: $gray-500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+  }
+  
+  .tbody {
+    background-color: white;
+    
+    .tr {
+      border-bottom: 1px solid $gray-200;
+      cursor: pointer;
+      transition: background-color 0.15s ease-in-out;
+      
+      &:hover {
+        background-color: $primary-50;
+      }
+      
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+    
+    .td {
+      padding: $spacing-4 $spacing-6;
+      white-space: nowrap;
+      vertical-align: top;
+      
+      &.actions {
+        text-align: right;
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+.fileInfo {
+  .fileName {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: $gray-900;
+  }
+  
+  .fileDescription {
+    font-size: 0.875rem;
+    color: $gray-500;
+  }
+}
+
+.category {
+  display: inline-flex;
+  padding: $spacing-1 $spacing-2;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: $border-radius-full;
+  background-color: $blue-100;
+  color: $blue-800;
+}
+
+.fileSize, .uploadDate {
+  font-size: 0.875rem;
+  color: $gray-500;
+}
+
+.actions {
+  @include flex-center;
+  
+  .actionButton {
+    color: $primary-600;
+    
+    &.delete {
+      color: $red-600;
+      
+      &:hover {
+        color: $red-900;
+      }
+    }
+  }
+}
+
+.loadingContainer {
+  @include flex-center;
+  height: 16rem;
+  
+  .spinner {
+    height: 2rem;
+    width: 2rem;
+  }
+} 

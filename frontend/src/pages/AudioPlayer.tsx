@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import { Link, useParams } from 'react-router-dom'
 import { audioAPI } from '../lib/api'
+import styles from './AudioPlayer.module.scss'
 
 // Get API base URL for streaming
 const getStreamUrl = (id: string) => {
@@ -134,21 +135,21 @@ export default function AudioPlayer() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+      <div className={styles.loadingContainer}>
+        <div className={styles.spinner}></div>
       </div>
     )
   }
 
   if (!audioFile) {
     return (
-      <div className="text-center py-12">
-        <h3 className="text-lg font-medium text-gray-900">Audio file not found</h3>
-        <p className="mt-1 text-sm text-gray-500">
+      <div className={styles.errorContainer}>
+        <h3 className={styles.errorTitle}>Audio file not found</h3>
+        <p className={styles.errorDescription}>
           The audio file you're looking for doesn't exist or you don't have permission to access it.
         </p>
-        <div className="mt-6">
-          <Link to="/files" className="btn-primary">
+        <div>
+          <Link to="/files" className={styles.backButton}>
             Back to Files
           </Link>
         </div>
@@ -157,74 +158,71 @@ export default function AudioPlayer() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      <div className="flex items-center space-x-4">
-        <Link to="/files" className="text-gray-600 hover:text-gray-900">
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <Link to="/files" className={styles.backButton}>
           <ArrowLeft className="h-5 w-5" />
         </Link>
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Audio Player</h1>
-          <p className="text-sm text-gray-500">Now playing: {audioFile.originalName}</p>
+        <div className={styles.headerContent}>
+          <h1 className={styles.title}>Audio Player</h1>
+          <p className={styles.subtitle}>Now playing: {audioFile.originalName}</p>
         </div>
       </div>
 
-      <div className="card">
-        <div className="space-y-6">
+      <div className={styles.playerCard}>
+        <div className={styles.playerContent}>
           {/* Audio file info */}
-          <div className="border-b border-gray-200 pb-4">
-            <h2 className="text-lg font-medium text-gray-900 mb-2">
+          <div className={styles.fileInfo}>
+            <h2 className={styles.fileName}>
               {audioFile.originalName}
             </h2>
             {audioFile.description && (
-              <p className="text-sm text-gray-600 mb-2">{audioFile.description}</p>
+              <p className={styles.fileDescription}>{audioFile.description}</p>
             )}
-            <div className="flex items-center space-x-4 text-sm text-gray-500">
-              <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+            <div className={styles.fileMeta}>
+              <span className={styles.category}>
                 {audioFile.category}
               </span>
-              <span>{formatFileSize(audioFile.fileSize)}</span>
-              <span>{new Date(audioFile.createdAt).toLocaleDateString()}</span>
+              <span className={styles.fileSize}>{formatFileSize(audioFile.fileSize)}</span>
+              <span className={styles.uploadDate}>{new Date(audioFile.createdAt).toLocaleDateString()}</span>
             </div>
           </div>
 
           {/* Audio player */}
-          <div className="audio-player">
+          <div className={styles.audioPlayer}>
             <audio
               ref={audioRef}
               src={audioUrl || getStreamUrl(id!)}
               onTimeUpdate={handleTimeUpdate}
               onLoadedMetadata={handleLoadedMetadata}
               onEnded={() => setPlaying(false)}
-        
             />
             
-            <div className="audio-controls">
+            <div className={styles.audioControls}>
               <button
                 onClick={togglePlay}
-                className="flex-shrink-0 w-12 h-12 bg-primary-600 text-white rounded-full flex items-center justify-center hover:bg-primary-700 transition-colors"
+                className={styles.playButton}
               >
-                {playing ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
+                {playing ? <Pause className={styles.playIcon} /> : <Play className={styles.playIcon} />}
               </button>
 
-              <div className="flex-1 space-y-2">
-                <div className="progress-bar">
-                  <input
-                    type="range"
-                    min="0"
-                    max={duration || 0}
-                    value={currentTime}
-                    onChange={handleSeek}
-                    className="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer slider"
-                  />
-                </div>
-                <div className="flex justify-between text-xs text-gray-500">
+              <div className={styles.progressSection}>
+                <input
+                  type="range"
+                  min="0"
+                  max={duration || 0}
+                  value={currentTime}
+                  onChange={handleSeek}
+                  className={styles.progressBar}
+                />
+                <div className={styles.timeDisplay}>
                   <span>{formatTime(currentTime)}</span>
                   <span>{formatTime(duration)}</span>
                 </div>
               </div>
 
-              <div className="flex items-center space-x-2">
-                <Volume2 className="h-4 w-4 text-gray-400" />
+              <div className={styles.volumeSection}>
+                <Volume2 className={styles.volumeIcon} />
                 <input
                   type="range"
                   min="0"
@@ -232,7 +230,7 @@ export default function AudioPlayer() {
                   step="0.1"
                   value={volume}
                   onChange={handleVolumeChange}
-                  className="w-20 h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer slider"
+                  className={styles.volumeSlider}
                 />
               </div>
             </div>

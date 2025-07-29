@@ -1,8 +1,9 @@
-import { Music, Play, Search, Trash2 } from 'lucide-react'
+import { Music, Search, Trash2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { audioAPI } from '../lib/api'
+import styles from './AudioList.module.scss'
 
 interface AudioFile {
   id: string
@@ -20,6 +21,7 @@ export default function AudioList() {
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('')
   const [categories, setCategories] = useState<string[]>([])
+  const navigate = useNavigate()
 
   useEffect(() => {
     loadAudioFiles()
@@ -50,7 +52,12 @@ export default function AudioList() {
     }
   }
 
-  const handleDelete = async (id: string) => {
+  const handleRowClick = (fileId: string) => {
+    navigate(`/player/${fileId}`)
+  }
+
+  const handleDelete = async (e: React.MouseEvent, id: string) => {
+    e.stopPropagation() // Prevent row click from triggering
     if (!confirm('Are you sure you want to delete this audio file?')) return
 
     try {
@@ -76,18 +83,18 @@ export default function AudioList() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+      <div className={styles.loadingContainer}>
+        <div className={styles.spinner}></div>
       </div>
     )
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
+    <div className={styles.container}>
+      <div className={styles.header}>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">My Audio Files</h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <h1 className={styles.title}>My Audio Files</h1>
+          <p className={styles.subtitle}>
             Manage and play your uploaded audio files.
           </p>
         </div>
@@ -96,21 +103,19 @@ export default function AudioList() {
         </Link>
       </div>
 
-      <div className="card">
-        <div className="flex flex-col sm:flex-row gap-4 mb-6">
-          <div className="flex-1">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search audio files..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="input pl-10"
-              />
-            </div>
+      <div className={styles.searchContainer}>
+        <div className={styles.searchForm}>
+          <div className={styles.searchInput}>
+            <Search className={styles.searchIcon} />
+            <input
+              type="text"
+              placeholder="Search audio files..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="input"
+            />
           </div>
-          <div className="sm:w-48">
+          <div className={styles.categorySelect}>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
@@ -133,77 +138,75 @@ export default function AudioList() {
         </div>
 
         {audioFiles.length === 0 ? (
-          <div className="text-center py-12">
-            <Music className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-2 text-sm font-medium text-gray-900">No audio files</h3>
-            <p className="mt-1 text-sm text-gray-500">
+          <div className={styles.emptyState}>
+            <Music className={styles.icon} />
+            <h3 className={styles.title}>No audio files</h3>
+            <p className={styles.description}>
               Get started by uploading your first audio file.
             </p>
-            <div className="mt-6">
+            <div className={styles.action}>
               <Link to="/upload" className="btn-primary">
                 Upload Audio
               </Link>
             </div>
           </div>
         ) : (
-          <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-            <table className="min-w-full divide-y divide-gray-300">
-              <thead className="bg-gray-50">
+          <div className={styles.tableContainer}>
+            <table className={styles.table}>
+              <thead className={styles.thead}>
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className={styles.th}>
                     File
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className={styles.th}>
                     Category
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className={styles.th}>
                     Size
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className={styles.th}>
                     Uploaded
                   </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className={styles.th}>
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className={styles.tbody}>
                 {audioFiles.map((file) => (
-                  <tr key={file.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div>
-                        <div className="text-sm font-medium text-gray-900">
+                  <tr 
+                    key={file.id} 
+                    className={styles.tr}
+                    onClick={() => handleRowClick(file.id)}
+                  >
+                    <td className={styles.td}>
+                      <div className={styles.fileInfo}>
+                        <div className={styles.fileName}>
                           {file.originalName}
                         </div>
                         {file.description && (
-                          <div className="text-sm text-gray-500">
+                          <div className={styles.fileDescription}>
                             {file.description}
                           </div>
                         )}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                    <td className={styles.td}>
+                      <span className={styles.category}>
                         {file.category}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className={`${styles.td} ${styles.fileSize}`}>
                       {formatFileSize(file.fileSize)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className={`${styles.td} ${styles.uploadDate}`}>
                       {formatDate(file.createdAt)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <div className="flex justify-end space-x-2">
-                        <Link
-                          to={`/player/${file.id}`}
-                          className="text-primary-600 hover:text-primary-900"
-                        >
-                          <Play className="h-4 w-4" />
-                        </Link>
+                    <td className={`${styles.td} ${styles.actions}`}>
+                      <div className={styles.actions}>
                         <button
-                          onClick={() => handleDelete(file.id)}
-                          className="text-red-600 hover:text-red-900"
+                          onClick={(e) => handleDelete(e, file.id)}
+                          className={`${styles.actionButton} ${styles.delete}`}
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>

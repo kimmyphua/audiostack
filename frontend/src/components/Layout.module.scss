@@ -1,0 +1,291 @@
+@use '../styles/globals.scss' as *;
+
+.container {
+  min-height: 100vh;
+  background-color: $gray-50;
+}
+
+.mobileSidebar {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  
+  @media (min-width: 768px) {
+    display: none;
+  }
+  
+  &.open {
+    display: block;
+  }
+  
+  &.closed {
+    display: none;
+  }
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: $gray-600;
+  opacity: 0.75;
+}
+
+.mobileSidebarContent {
+  position: fixed;
+  height: 100%;
+  left: 0;
+  width: 100%;
+  @include flex-col;
+  background-color: white;
+}
+
+.mobileHeader {
+  @include flex-center;
+  justify-content: space-between;
+  height: 4rem;
+  padding: 0 $spacing-4;
+  
+  .title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: $gray-900;
+  }
+}
+
+.mobileNav {
+  flex: 1;
+  padding: $spacing-2 $spacing-4;
+  
+  .navList {
+    @include flex-col;
+    gap: $spacing-1;
+  }
+}
+
+.mobileUserSection {
+  border-top: 1px solid $gray-200;
+  padding: $spacing-4;
+  
+  .userInfo {
+    @include flex-center;
+    
+    .avatar {
+      flex-shrink: 0;
+      
+      .avatarCircle {
+        @include flex-center;
+        height: 2rem;
+        width: 2rem;
+        border-radius: $border-radius-full;
+        background-color: $primary-600;
+        
+        .avatarText {
+          font-size: 0.875rem;
+          font-weight: 500;
+          color: white;
+        }
+      }
+    }
+    
+    .userDetails {
+      margin-left: $spacing-3;
+      
+      .username {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: $gray-700;
+      }
+    }
+  }
+  
+  .logoutButton {
+    @include flex-center;
+    width: 100%;
+    margin-top: $spacing-3;
+    padding: $spacing-2;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: $gray-600;
+    border-radius: $border-radius;
+    
+    &:hover {
+      background-color: $gray-50;
+      color: $gray-900;
+    }
+  }
+}
+
+.desktopSidebar {
+  position: fixed;
+  height: 100%;
+  left: 0;
+  width: 16rem;
+  @include flex-col;
+  background-color: white;
+  border-right: 1px solid $gray-200;
+  
+  @media (max-width: 769px) {
+    display: none;
+  }
+}
+
+.desktopHeader {
+  @include flex-center;
+  height: 4rem;
+  padding: 0 $spacing-4;
+  
+  .title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: $gray-900;
+  }
+}
+
+.desktopNav {
+  flex: 1;
+  padding: $spacing-2 $spacing-4;
+  
+  .navList {
+    @include flex-col;
+    gap: $spacing-1;
+  }
+}
+
+.desktopUserSection {
+  border-top: 1px solid $gray-200;
+  padding: $spacing-4;
+  
+  .userInfo {
+    @include flex-center;
+    
+    .avatar {
+      flex-shrink: 0;
+      
+      .avatarCircle {
+        @include flex-center;
+        height: 2rem;
+        width: 2rem;
+        border-radius: $border-radius-full;
+        background-color: $primary-600;
+        
+        .avatarText {
+          font-size: 0.875rem;
+          font-weight: 500;
+          color: white;
+        }
+      }
+    }
+    
+    .userDetails {
+      margin-left: $spacing-3;
+      
+      .username {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: $gray-700;
+      }
+    }
+  }
+  
+  .logoutButton {
+    @include flex-center;
+    width: 100%;
+    margin-top: $spacing-3;
+    padding: $spacing-2;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: $gray-600;
+    border-radius: $border-radius;
+    
+    &:hover {
+      background-color: $gray-50;
+      color: $gray-900;
+    }
+  }
+}
+
+.navItem {
+  @include flex-center;
+  padding: $spacing-2;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: $border-radius;
+  color: $gray-600;
+  text-decoration: none;
+  
+  &:hover {
+    background-color: $gray-50;
+    color: $gray-900;
+  }
+  
+  &.active {
+    background-color: $primary-100;
+    color: $primary-900;
+  }
+  
+  .icon {
+    margin-right: $spacing-3;
+    height: 1.25rem;
+    width: 1.25rem;
+  }
+}
+
+.mainContent {
+  padding-left: 16rem;
+  
+  @media (max-width: 768px) {
+    padding-left: 0;
+  }
+}
+
+.topBar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: 4rem;
+  flex-shrink: 0;
+  gap: $spacing-4;
+  border-bottom: 1px solid $gray-200;
+  background-color: white;
+  box-shadow: $shadow-sm;
+  padding: 0 $spacing-4;
+  
+  @media (min-width: 640px) {
+    gap: $spacing-6;
+    padding: 0 $spacing-6;
+  }
+  
+  @media (min-width: 768px) {
+    padding: 0 $spacing-8;
+  }
+  
+  .menuButton {
+    padding: $spacing-2.5;
+    color: $gray-700;
+    
+    @media (min-width: 768px) {
+      display: none;
+    }
+  }
+}
+
+.content {
+  padding: $spacing-6 0;
+  
+  .contentInner {
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 0 $spacing-4;
+    
+    @media (min-width: 640px) {
+      padding: 0 $spacing-6;
+    }
+    
+    @media (min-width: 768px) {
+      padding: 0 $spacing-8;
+    }
+  }
+} 

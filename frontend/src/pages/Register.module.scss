@@ -1,0 +1,116 @@
+@use '../styles/globals.scss' as *;
+
+.container {
+  min-height: 100vh;
+  @include flex-center;
+  background-color: $gray-50;
+  padding: $spacing-12 $spacing-4;
+  
+  @media (min-width: 640px) {
+    padding: $spacing-12 $spacing-6;
+  }
+  
+  @media (min-width: 1024px) {
+    padding: $spacing-12 $spacing-8;
+  }
+}
+
+.formContainer {
+  max-width: 28rem;
+  width: 100%;
+  @include flex-col;
+  gap: $spacing-8;
+}
+
+.header {
+  text-align: center;
+  
+  .iconContainer {
+    margin: 0 auto;
+    height: 3rem;
+    width: 3rem;
+    @include flex-center;
+    border-radius: $border-radius-full;
+    background-color: $primary-100;
+    
+    .icon {
+      height: 1.5rem;
+      width: 1.5rem;
+      color: $primary-600;
+    }
+  }
+  
+  .title {
+    margin-top: $spacing-6;
+    font-size: 1.875rem;
+    font-weight: 800;
+    color: $gray-900;
+    text-align: center;
+  }
+  
+  .subtitle {
+    margin-top: $spacing-2;
+    font-size: 0.875rem;
+    color: $gray-600;
+    text-align: center;
+    
+    .link {
+      font-weight: 500;
+      color: $primary-600;
+      
+      &:hover {
+        color: $primary-500;
+      }
+    }
+  }
+}
+
+.form {
+  margin-top: $spacing-8;
+  @include flex-col;
+  gap: $spacing-6;
+}
+
+.formGroup {
+  @include flex-col;
+  gap: $spacing-4;
+}
+
+.inputGroup {
+  .label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: $gray-700;
+    margin-bottom: $spacing-1;
+  }
+  
+  .input {
+    @extend .input;
+    margin-top: $spacing-1;
+  }
+}
+
+.passwordContainer {
+  position: relative;
+  
+  .input {
+    padding-right: 2.5rem;
+  }
+  
+  .toggleButton {
+    position: absolute;
+    inset-y: 0;
+    right: 0;
+    padding-right: $spacing-3;
+    @include flex-center;
+    color: $gray-400;
+  }
+}
+
+.submitButton {
+  @extend .btn-primary;
+  width: 100%;
+  @include flex-center;
+  padding: $spacing-2 $spacing-4;
+} 

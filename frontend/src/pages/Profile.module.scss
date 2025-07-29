@@ -1,0 +1,50 @@
+@use '../styles/globals.scss' as *;
+
+.container {
+  max-width: 36rem;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: $spacing-6;
+  
+  .title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: $gray-900;
+    margin: 0;
+  }
+  
+  .subtitle {
+    margin-top: $spacing-1;
+    font-size: 0.875rem;
+    color: $gray-500;
+  }
+}
+
+.form {
+  @extend .card;
+  @include flex-col;
+  gap: $spacing-6;
+}
+
+.formGroup {
+  .label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: $gray-700;
+    margin-bottom: $spacing-1;
+  }
+  
+  .input {
+    @extend .input;
+    margin-top: $spacing-1;
+  }
+}
+
+.actions {
+  @include flex-center;
+  justify-content: flex-end;
+  gap: $spacing-3;
+} 

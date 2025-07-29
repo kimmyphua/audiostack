@@ -3,6 +3,7 @@ import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import { audioAPI } from '../lib/api'
+import styles from './AudioUpload.module.scss'
 
 const AUDIO_CATEGORIES = [
   'Music',
@@ -68,35 +69,35 @@ export default function AudioUpload() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Upload Audio File</h1>
-        <p className="mt-1 text-sm text-gray-500">
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h1 className={styles.title}>Upload Audio File</h1>
+        <p className={styles.subtitle}>
           Upload your audio files and organize them with categories and descriptions.
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="card">
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <div className={styles.uploadCard}>
+          <div className={styles.uploadContent}>
+            <div className={styles.fileUpload}>
+              <label className={styles.label}>
                 Audio File
               </label>
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary-400 transition-colors">
+              <div className={styles.dropzone}>
                 <input
                   type="file"
                   accept="audio/*,video/*"
                   onChange={handleFileChange}
-                  className="hidden"
+                  className={styles.input}
                   id="audio-file"
                 />
-                <label htmlFor="audio-file" className="cursor-pointer">
+                <label htmlFor="audio-file" className={styles.label}>
                   {file ? (
-                    <div className="space-y-2">
-                      <Music className="mx-auto h-12 w-12 text-primary-600" />
-                      <p className="text-sm font-medium text-gray-900">{file.name}</p>
-                      <p className="text-xs text-gray-500">
+                    <div className={styles.fileInfo}>
+                      <Music className={styles.icon} />
+                      <p className={styles.fileName}>{file.name}</p>
+                      <p className={styles.fileSize}>
                         {(file.size / 1024 / 1024).toFixed(2)} MB
                       </p>
                       <button
@@ -105,18 +106,18 @@ export default function AudioUpload() {
                           e.preventDefault()
                           setFile(null)
                         }}
-                        className="text-xs text-red-600 hover:text-red-800"
+                        className={styles.removeButton}
                       >
                         Remove file
                       </button>
                     </div>
                   ) : (
-                    <div className="space-y-2">
-                      <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                      <p className="text-sm font-medium text-gray-900">
+                    <div className={styles.uploadPrompt}>
+                      <Upload className={styles.icon} />
+                      <p className={styles.title}>
                         Click to select audio file
                       </p>
-                      <p className="text-xs text-gray-500">
+                      <p className={styles.description}>
                         MP3, WAV, OGG, AAC, FLAC, MP4, WEBM up to 25MB
                       </p>
                     </div>
@@ -125,15 +126,15 @@ export default function AudioUpload() {
               </div>
             </div>
 
-            <div>
-              <label htmlFor="category" className="block text-sm font-medium text-gray-700">
+            <div className={styles.formGroup}>
+              <label htmlFor="category" className={styles.label}>
                 Category
               </label>
               <select
                 id="category"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="input mt-1"
+                className={styles.select}
               >
                 {AUDIO_CATEGORIES.map((cat) => (
                   <option key={cat} value={cat}>
@@ -143,8 +144,8 @@ export default function AudioUpload() {
               </select>
             </div>
 
-            <div>
-              <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+            <div className={styles.formGroup}>
+              <label htmlFor="description" className={styles.label}>
                 Description (optional)
               </label>
               <textarea
@@ -152,14 +153,14 @@ export default function AudioUpload() {
                 rows={3}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="input mt-1"
+                className={styles.textarea}
                 placeholder="Describe your audio file..."
               />
             </div>
           </div>
         </div>
 
-        <div className="flex justify-end space-x-3">
+        <div className={styles.actions}>
           <button
             type="button"
             onClick={() => navigate('/files')}
