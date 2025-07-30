@@ -31,9 +31,18 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    // Only redirect on 401 errors if we're not on auth pages
     if (error.response?.status === 401) {
-      storage.remove('token')
-      window.location.href = '/login'
+      const currentPath = window.location.pathname
+      const isAuthPage = currentPath.includes('/login') || currentPath.includes('/register')
+      
+      if (!isAuthPage) {
+        console.log('401 error on non-auth page, redirecting to login')
+        storage.remove('token')
+        window.location.href = '/login'
+      } else {
+        console.log('401 error on auth page, not redirecting')
+      }
     }
     return Promise.reject(error)
   }

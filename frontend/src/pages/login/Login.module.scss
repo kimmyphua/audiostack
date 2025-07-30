@@ -68,17 +68,14 @@
 .form {
   margin-top: $spacing-8;
   @include flex-col;
-  gap: $spacing-6;
+  gap: $spacing-4;
 }
 
 .inputGroup {
   @include flex-col;
-  gap: 0;
-  border-radius: $border-radius;
-  box-shadow: $shadow;
+  gap: $spacing-4;
   
   .input {
-    border-radius: 0;
     border: 1px solid $gray-300;
     
     &:first-child {
@@ -95,11 +92,16 @@
       border-color: $primary-500;
       box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
+    
+    &.error {
+      border-color: $red-600;
+    }
   }
 }
 
 .passwordContainer {
   position: relative;
+  @include flex-center;
   
   .input {
     padding-right: 2.5rem;
@@ -107,7 +109,6 @@
   
   .toggleButton {
     position: absolute;
-    inset-y: 0;
     right: 0;
     padding-right: $spacing-3;
     @include flex-center;
@@ -129,4 +130,10 @@
     font-size: 0.875rem;
     color: $gray-600;
   }
+}
+
+.errorMessage {
+  margin: 0;
+  font-size: 0.875rem;
+  color: $red-600;
 } 

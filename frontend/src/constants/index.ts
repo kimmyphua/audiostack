@@ -59,18 +59,18 @@ export const QUICK_ACTIONS = [
 export const GETTING_STARTED_STEPS = [
   {
     number: 1,
-    text: 'Upload your first audio file',
-    description: 'Click on "Upload Audio" to get started with your music collection.',
+    text: 'Drop the Beat',
+    description: 'Ready to jam? Click on “Upload Audio” and kick off your personal sound collection. \n 🎵 Your vibes, your library.',
   },
   {
     number: 2,
-    text: 'Organize your files',
-    description: 'Use categories and descriptions to keep your audio files organized.',
+    text: 'Sort Like a Pro',
+    description: 'Keep your library tight - add categories and descriptions to find your files faster than you can say “lo-fi chill beats”. \n 📁 Organized files = happier ears.',
   },
   {
     number: 3,
-    text: 'Enjoy your music',
-    description: 'Use the built-in audio player to listen to your uploaded files.',
+    text: 'Hit Play & Vibe',
+    description: 'Kick back and let the music play. Our built-in player is here to soundtrack your moment.\n ▶️ Because silence is overrated.',
   },
 ]  
 

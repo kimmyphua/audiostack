@@ -3,6 +3,7 @@
 .container {
   min-height: 100vh;
   background-color: $gray-50;
+  white-space: pre-line;
 }
 
 .mobileSidebar {
@@ -288,4 +289,19 @@
       padding: 0 $spacing-8;
     }
   }
+}
+
+.icon {
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+.closeIcon {
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+.menuIcon {
+  height: 1.5rem;
+  width: 1.5rem;
 } 

@@ -1,8 +1,9 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import { Request, Response, Router } from 'express';
-import { body, validationResult } from 'express-validator';
+import { body } from 'express-validator';
 import jwt from 'jsonwebtoken';
+import { ErrorResponses, handleValidationErrors } from '../utils/errorHandler';
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -13,26 +14,35 @@ router.post('/login', [
   body('password').notEmpty().withMessage('Password is required')
 ], async (req: Request, res: Response) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+    console.log('Login attempt:', { username: req.body.username, timestamp: new Date().toISOString() });
+    
+    // Handle validation errors
+    if (handleValidationErrors(req, res)) {
+      return;
     }
 
     const { username, password } = req.body;
 
-    // Find user
-    const user = await prisma.user.findUnique({
-      where: { username }
+    // Find user by username or email
+    const user = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { username },
+          { email: username } // Allow login with email
+        ]
+      }
     });
 
     if (!user) {
-      return res.status(401).json({ error: 'Invalid credentials' });
+      console.log('Login failed: User not found for username/email:', username);
+      return res.status(401).json(ErrorResponses.invalidCredentials());
     }
 
     // Check password
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
-      return res.status(401).json({ error: 'Invalid credentials' });
+      console.log('Login failed: Invalid password for user:', user.username);
+      return res.status(401).json(ErrorResponses.invalidCredentials());
     }
 
     // Generate JWT token
@@ -52,24 +62,35 @@ router.post('/login', [
       }
     };
 
-    console.log('Login response data:', responseData);
+    console.log('Login successful for user:', user.username);
     res.json(responseData);
   } catch (error) {
     console.error('Login error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json(ErrorResponses.internalServerError('An unexpected error occurred during login'));
   }
 });
 
 // Register route
 router.post('/register', [
-  body('username').isLength({ min: 3 }).withMessage('Username must be at least 3 characters'),
-  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
-  body('email').isEmail().withMessage('Valid email is required')
+  body('username')
+    .isLength({ min: 3 })
+    .withMessage('Username must be at least 3 characters')
+    .matches(/^[a-zA-Z0-9_]+$/)
+    .withMessage('Username can only contain letters, numbers, and underscores'),
+  body('password')
+    .isLength({ min: 6 })
+    .withMessage('Password must be at least 6 characters'),
+  body('email')
+    .isEmail()
+    .withMessage('Valid email is required')
+    .normalizeEmail()
 ], async (req: Request, res: Response) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+    console.log('Registration attempt:', { username: req.body.username, email: req.body.email, timestamp: new Date().toISOString() });
+    
+    // Handle validation errors
+    if (handleValidationErrors(req, res)) {
+      return;
     }
 
     const { username, password, email } = req.body;
@@ -79,13 +100,15 @@ router.post('/register', [
       where: {
         OR: [
           { username },
-          ...(email ? [{ email }] : [])
+          { email }
         ]
       }
     });
 
     if (existingUser) {
-      return res.status(400).json({ error: 'Username or email already exists' });
+      const conflictField = existingUser.username === username ? 'username' : 'email';
+      console.log('Registration failed: User already exists with', conflictField, existingUser[conflictField]);
+      return res.status(400).json(ErrorResponses.userAlreadyExists(conflictField));
     }
 
     // Hash password
@@ -107,6 +130,7 @@ router.post('/register', [
       { expiresIn: '24h' }
     );
 
+    console.log('Registration successful for user:', user.username);
     res.status(201).json({
       message: 'User created successfully',
       token,
@@ -118,7 +142,7 @@ router.post('/register', [
     });
   } catch (error) {
     console.error('Registration error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json(ErrorResponses.internalServerError('An unexpected error occurred during registration'));
   }
 });
 
@@ -129,10 +153,17 @@ router.get('/me', async (req: Request, res: Response) => {
     const token = authHeader && authHeader.split(' ')[1];
 
     if (!token) {
-      return res.status(401).json({ error: 'Access token required' });
+      console.log('Get user failed: No token provided');
+      return res.status(401).json(ErrorResponses.authenticationRequired());
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any;
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET!) as any;
+    } catch (jwtError) {
+      console.log('Get user failed: Invalid token');
+      return res.status(401).json(ErrorResponses.invalidToken());
+    }
     
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },
@@ -140,9 +171,11 @@ router.get('/me', async (req: Request, res: Response) => {
     });
 
     if (!user) {
-      return res.status(401).json({ error: 'User not found' });
+      console.log('Get user failed: User not found for token');
+      return res.status(401).json(ErrorResponses.userNotFound());
     }
 
+    console.log('Get user successful for:', user.username);
     res.json({ 
       user: {
         id: user.id,
@@ -153,7 +186,7 @@ router.get('/me', async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error('Get user error:', error);
-    res.status(401).json({ error: 'Invalid token' });
+    res.status(500).json(ErrorResponses.internalServerError('An unexpected error occurred while fetching user data'));
   }
 });
 

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Icon } from '../../components/Icon'
 import { GETTING_STARTED_STEPS, QUICK_ACTIONS } from '../../constants'
-import { useAuth } from '../../hooks'
+import { useAuth } from '../../hooks/useAuth'
 import styles from './Dashboard.module.scss'
 
 export default function Dashboard() {

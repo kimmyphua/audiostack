@@ -1,6 +1,6 @@
 import { Music, Upload } from 'lucide-react'
 import { AUDIO_CATEGORIES, MAX_FILE_SIZE_MB, SUPPORTED_AUDIO_FORMATS } from '../../constants'
-import { useFileUpload } from '../../hooks'
+import { useFileUpload } from './hooks/useFileUpload'
 import { formatFileSize } from '../../utils'
 import styles from './AudioUpload.module.scss'
 

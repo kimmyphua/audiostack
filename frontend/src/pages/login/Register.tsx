@@ -3,32 +3,32 @@ import toast from 'react-hot-toast'
 import { Link, useNavigate } from 'react-router-dom'
 import { Icon } from '../../components/Icon'
 import { useAuth } from '../../hooks/useAuth'
+import getErrorMessages from '../../hooks/getErrorMessages'
 import styles from './Register.module.scss'
+import { AxiosError } from 'axios'
 
 export default function Register() {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
-  const [loading, setLoading] = useState(false)
   const auth = useAuth()
-  const { register } = auth || { register: async () => {} }
+  const { registerMutation } = auth || {}
+  const { isLoading: registerLoading, mutateAsync: register, reset: clearErrors, isSuccess: registerSuccess} = registerMutation
   const navigate = useNavigate()
-
+  const [errors, setErrors] = useState<Record<string, string> | null>(null)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
-
     try {
-      await register(username, password, email)
-      toast.success('Registration successful!')
-      navigate('/dashboard')
-    } catch (error: any) {
-      toast.error(error.response?.data?.error || 'Registration failed')
-    } finally {
-      setLoading(false)
+      await register({username, password, email}) 
+        toast.success('Registration successful!')
+        navigate('/dashboard')
+    } catch (error) {
+      console.log({ error });
+      setErrors(getErrorMessages(error as AxiosError<any>))
     }
   }
+console.log({errors,username: errors?.username });
 
   return (
     <div className={styles.container}>
@@ -58,11 +58,17 @@ export default function Register() {
                 name="username"
                 type="text"
                 required
-                className={styles.input}
+                className={`${styles.input} ${errors?.username ? styles.error : ''}`}
                 placeholder="Enter username"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e) => {
+                  setUsername(e.target.value)
+                  clearErrors()
+                }}
               />
+              {errors?.username && (
+                <span className={styles.errorMessage}>{errors.username}</span>
+              )}
             </div>
             <div className={styles.inputGroup}>
               <label htmlFor="email" className={styles.label}>
@@ -73,11 +79,17 @@ export default function Register() {
                 name="email"
                 type="email"
                 required
-                className={styles.input}
+                className={`${styles.input} ${errors?.email ? styles.error : ''}`}
                 placeholder="Enter email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value)
+               clearErrors()
+                }}
               />
+              {errors?.email && (
+                <span className={styles.errorMessage}>{errors.email}</span>
+              )}
             </div>
             <div className={styles.inputGroup}>
               <label htmlFor="password" className={styles.label}>
@@ -89,10 +101,13 @@ export default function Register() {
                   name="password"
                   type={showPassword ? 'text' : 'password'}
                   required
-                  className={styles.input}
+                  className={`${styles.input} ${errors?.password ? styles.error : ''}`}
                   placeholder="Enter password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value)
+                    clearErrors()
+                  }}
                 />
                 <button
                   type="button"
@@ -100,21 +115,24 @@ export default function Register() {
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
-                    <Icon name="EyeOff" className="h-5 w-5" />
+                    <Icon name="EyeOff" />
                   ) : (
-                    <Icon name="Eye" className="h-5 w-5" />
+                    <Icon name="Eye" />
                   )}
                 </button>
               </div>
+              {errors?.password && (
+                <span className={styles.errorMessage}>{errors.password}</span>
+              )}
             </div>
           </div>
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={registerLoading}
             className={styles.submitButton}
           >
-            {loading ? 'Creating account...' : 'Create account'}
+            {registerLoading ? 'Creating account...' : 'Create account'}
           </button>
         </form>
       </div>

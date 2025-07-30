@@ -20,10 +20,14 @@ export interface AudioFile {
 export interface AuthContextType {
   user: User | null
   loading: boolean
-  login: (username: string, password: string) => Promise<void>
-  register: (username: string, password: string, email: string) => Promise<void>
+  login: (username: string, password: string) => Promise<{ token: string; user: User }>
+  register: (username: string, password: string, email: string) => Promise<{ token: string; user: User }>
   logout: () => void
-  updateUser: (data: Partial<User>) => Promise<void>
+  updateUser: (data: Partial<User>) => Promise<User>
+  // Full mutation objects
+  loginMutation: any
+  registerMutation: any
+  updateUserMutation: any
 }
 
 // Navigation types

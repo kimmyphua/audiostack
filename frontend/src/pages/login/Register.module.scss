@@ -88,23 +88,30 @@
   .input {
     @extend .input;
     margin-top: $spacing-1;
+    
+    &.error {
+      border-color: $red-600;
+    }
   }
 }
 
 .passwordContainer {
   position: relative;
-  
+  @include flex-center;
   .input {
     padding-right: 2.5rem;
   }
   
   .toggleButton {
     position: absolute;
-    inset-y: 0;
     right: 0;
     padding-right: $spacing-3;
     @include flex-center;
     color: $gray-400;
+
+    &:focus {
+      outline: none;
+    }
   }
 }
 
@@ -113,4 +120,10 @@
   width: 100%;
   @include flex-center;
   padding: $spacing-2 $spacing-4;
+}
+
+.errorMessage {
+  margin-top: $spacing-1;
+  font-size: 0.875rem;
+  color: $red-600;
 } 

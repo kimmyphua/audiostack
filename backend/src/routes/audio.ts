@@ -1,9 +1,10 @@
 import { PrismaClient } from '@prisma/client';
 import { Request, Response, Router } from 'express';
-import { body, validationResult } from 'express-validator';
+import { body } from 'express-validator';
 import fs from 'fs';
 import { authenticateToken, AuthRequest } from '../middleware/auth';
 import { upload } from '../middleware/upload';
+import { ErrorResponses, handleValidationErrors } from '../utils/errorHandler';
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -33,13 +34,16 @@ router.post('/upload', [
     console.log('Request file:', req.file);
     console.log('Request headers:', req.headers['content-type']);
     
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+    // Handle validation errors
+    if (handleValidationErrors(req, res)) {
+      return;
     }
     
     if (!req.file) {
-      return res.status(400).json({ error: 'No audio file provided' });
+      return res.status(400).json({
+        error: 'No file provided',
+        message: 'No audio file provided'
+      });
     }
 
     const { description, category } = req.body;
@@ -58,7 +62,6 @@ router.post('/upload', [
         userId
       }
     });
-    console.log({ audioFile })
     res.status(201).json({
       message: 'Audio file uploaded successfully',
       audioFile: {
@@ -74,7 +77,7 @@ router.post('/upload', [
     });
   } catch (error) {
     console.error('Upload error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json(ErrorResponses.internalServerError());
   }
 });
 
@@ -130,7 +133,7 @@ router.get('/my-files', authenticateToken, async (req: AuthRequest, res: Respons
     });
   } catch (error) {
     console.error('Get audio files error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json(ErrorResponses.internalServerError());
   }
 });
 
@@ -157,13 +160,13 @@ router.get('/:id', authenticateToken, async (req: AuthRequest, res: Response) =>
     });
 
     if (!audioFile) {
-      return res.status(404).json({ error: 'Audio file not found' });
+      return res.status(404).json(ErrorResponses.notFound('Audio file'));
     }
 
     res.json({ audioFile });
   } catch (error) {
     console.error('Get audio file error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json(ErrorResponses.internalServerError());
   }
 });
 
@@ -174,9 +177,9 @@ router.put('/:id', [
   body('category').optional().isIn(AUDIO_CATEGORIES).withMessage('Invalid category')
 ], async (req: AuthRequest, res: Response) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+    // Handle validation errors
+    if (handleValidationErrors(req, res)) {
+      return;
     }
 
     const { id } = req.params;
@@ -188,7 +191,7 @@ router.put('/:id', [
     });
 
     if (!audioFile) {
-      return res.status(404).json({ error: 'Audio file not found' });
+      return res.status(404).json(ErrorResponses.notFound('Audio file'));
     }
 
     const updatedAudioFile = await prisma.audioFile.update({
@@ -217,7 +220,7 @@ router.put('/:id', [
     });
   } catch (error) {
     console.error('Update audio file error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json(ErrorResponses.internalServerError());
   }
 });
 
@@ -232,7 +235,7 @@ router.delete('/:id', authenticateToken, async (req: AuthRequest, res: Response)
     });
 
     if (!audioFile) {
-      return res.status(404).json({ error: 'Audio file not found' });
+      return res.status(404).json(ErrorResponses.notFound('Audio file'));
     }
 
     // Delete file from filesystem
@@ -248,7 +251,7 @@ router.delete('/:id', authenticateToken, async (req: AuthRequest, res: Response)
     res.json({ message: 'Audio file deleted successfully' });
   } catch (error) {
     console.error('Delete audio file error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json(ErrorResponses.internalServerError());
   }
 });
 
@@ -267,7 +270,7 @@ router.get('/:id/file', async (req: Request, res: Response) => {
     const queryToken = req.query.token as string;
     
     if (!queryToken) {
-      return res.status(401).json({ error: 'Access token required' });
+      return res.status(401).json(ErrorResponses.authenticationRequired());
     }
     
     // Verify token and get user
@@ -282,7 +285,7 @@ router.get('/:id/file', async (req: Request, res: Response) => {
 
     if (!audioFile) {
       console.log('Audio file not found for ID:', id, 'User ID:', userId);
-      return res.status(404).json({ error: 'Audio file not found' });
+      return res.status(404).json(ErrorResponses.notFound('Audio file'));
     }
 
     console.log('Audio file found:', audioFile.filename);
@@ -290,7 +293,7 @@ router.get('/:id/file', async (req: Request, res: Response) => {
     
     if (!fs.existsSync(filePath)) {
       console.log('File does not exist at path:', filePath);
-      return res.status(404).json({ error: 'File not found on server' });
+      return res.status(404).json(ErrorResponses.notFound('File'));
     }
 
     const fileSize = fs.statSync(filePath).size;
@@ -317,7 +320,7 @@ router.get('/:id/file', async (req: Request, res: Response) => {
     console.log('File stream piped to response');
   } catch (error) {
     console.error('Direct file serving error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json(ErrorResponses.internalServerError());
   }
 });
 

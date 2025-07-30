@@ -3,8 +3,8 @@ import { Link, Outlet, useLocation } from 'react-router-dom'
 import { NAVIGATION_ITEMS } from '../constants'
 import { useAuth } from '../hooks/useAuth'
 import { getInitials } from '../utils'
-import styles from './Layout.module.scss'
 import { Icon } from './Icon'
+import styles from './Layout.module.scss'
 
 export default function Layout() {
   const auth = useAuth()
@@ -25,7 +25,7 @@ export default function Layout() {
           <div className={styles.mobileHeader}>
             <h1 className={styles.title}>AudioStack</h1>
             <button onClick={() => setSidebarOpen(false)}>
-              <Icon name="X" className="h-6 w-6" />
+              <Icon name="X" className={styles.closeIcon} />
             </button>
           </div>
           <nav className={styles.mobileNav}>
@@ -123,7 +123,7 @@ export default function Layout() {
             className={styles.menuButton}
             onClick={() => setSidebarOpen(true)}
           >
-            <Icon name="Menu" className="h-6 w-6" />
+            <Icon name="Menu" className={styles.menuIcon} />
           </button>
         </div>
 

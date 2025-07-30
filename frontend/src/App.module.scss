@@ -1,0 +1,15 @@
+@use './styles/globals.scss' as *;
+
+.loadingContainer {
+  min-height: 100vh;
+  @include flex-center;
+}
+
+.loadingSpinner {
+  animation: spin 1s linear infinite;
+  border-radius: 50%;
+  height: 8rem;
+  width: 8rem;
+  border: 2px solid $gray-300;
+  border-top-color: $primary-600;
+} 

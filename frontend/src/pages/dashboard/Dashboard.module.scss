@@ -99,8 +99,12 @@
   }
   
   .steps {
-    @include flex-col;
+    display: flex;
     gap: $spacing-4;
+
+    @media (max-width: 1024px) {
+     @include flex-col;
+    }
   }
   
   .step {

@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
+import styles from './App.module.scss'
 import Layout from './components/Layout'
 import { useAuth } from './hooks/useAuth'
 import AudioList from './pages/audio/AudioList'
@@ -13,10 +14,11 @@ function App() {
   const auth = useAuth()
   const { user, loading } = auth || { user: null, loading: true }
 
+  // Show loading spinner only when we're actually checking auth
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-600"></div>
+      <div className={styles.loadingContainer}>
+        <div className={styles.loadingSpinner}></div>
       </div>
     )
   }

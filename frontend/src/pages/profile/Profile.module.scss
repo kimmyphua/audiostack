@@ -29,6 +29,8 @@
 }
 
 .formGroup {
+  position: relative;
+
   .label {
     display: block;
     font-size: 0.875rem;
@@ -40,6 +42,22 @@
   .input {
     @extend .input;
     margin-top: $spacing-1;
+    &.error {
+      border-color: $red-600;
+    }
+  }
+
+  .toggleButton {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    padding-right: $spacing-3;
+    @include flex-center;
+    color: $gray-400;
+
+    &:focus {
+      outline: none;
+    }
   }
 }
 
@@ -47,4 +65,18 @@
   @include flex-center;
   justify-content: flex-end;
   gap: $spacing-3;
+}
+
+.deleteButton {
+  @extend .btn-danger;
+}
+
+.saveButton {
+  @extend .btn-primary;
+} 
+
+.errorMessage {
+  margin-top: $spacing-1;
+  font-size: 0.875rem;
+  color: $red-600;
 } 

@@ -76,8 +76,13 @@ async function startServer() {
     console.log('Database connected successfully!');
     
     // Create default admin user if it doesn't exist
-    const defaultAdmin = await prisma.user.findUnique({
-      where: { username: process.env.DEFAULT_ADMIN_USERNAME || 'admin' }
+    const defaultAdmin = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { username: process.env.DEFAULT_ADMIN_USERNAME || 'admin' },
+          { email: 'admin@audiostack.com' }
+        ]
+      }
     });
     
     if (!defaultAdmin) {
@@ -92,6 +97,8 @@ async function startServer() {
         }
       });
       console.log('✅ Default admin user created');
+    } else {
+      console.log('✅ Default admin user already exists');
     }
     
     app.listen(PORT, () => {

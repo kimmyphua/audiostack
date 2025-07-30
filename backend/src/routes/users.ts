@@ -1,8 +1,9 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import { Response, Router } from 'express';
-import { body, validationResult } from 'express-validator';
+import { body } from 'express-validator';
 import { authenticateToken, AuthRequest } from '../middleware/auth';
+import { ErrorResponses, handleValidationErrors } from '../utils/errorHandler';
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -28,7 +29,7 @@ router.get('/', authenticateToken, async (req: AuthRequest, res: Response) => {
     res.json({ users });
   } catch (error) {
     console.error('Get users error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json(ErrorResponses.internalServerError());
   }
 });
 
@@ -40,7 +41,7 @@ router.get('/:id', authenticateToken, async (req: AuthRequest, res: Response) =>
 
     // Users can only view their own profile unless they're admin
     if (id !== userId) {
-      return res.status(403).json({ error: 'Access denied' });
+      return res.status(403).json(ErrorResponses.accessDenied());
     }
 
     const user = await prisma.user.findUnique({
@@ -60,13 +61,13 @@ router.get('/:id', authenticateToken, async (req: AuthRequest, res: Response) =>
     });
 
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json(ErrorResponses.userNotFoundById());
     }
 
     res.json({ user });
   } catch (error) {
     console.error('Get user error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json(ErrorResponses.internalServerError());
   }
 });
 
@@ -78,9 +79,9 @@ router.put('/:id', [
   body('password').optional().isLength({ min: 6 }).withMessage('Password must be at least 6 characters')
 ], async (req: AuthRequest, res: Response) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+    // Handle validation errors
+    if (handleValidationErrors(req, res)) {
+      return;
     }
 
     const { id } = req.params;
@@ -89,7 +90,7 @@ router.put('/:id', [
 
     // Users can only update their own profile
     if (id !== userId) {
-      return res.status(403).json({ error: 'Access denied' });
+      return res.status(403).json(ErrorResponses.accessDenied());
     }
 
     // Check if username or email already exists
@@ -105,7 +106,7 @@ router.put('/:id', [
       });
 
       if (existingUser) {
-        return res.status(400).json({ error: 'Username or email already exists' });
+        return res.status(400).json(ErrorResponses.usernameOrEmailExists());
       }
     }
 
@@ -132,7 +133,7 @@ router.put('/:id', [
     res.json({ message: 'User updated successfully', user });
   } catch (error) {
     console.error('Update user error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json(ErrorResponses.internalServerError());
   }
 });
 
@@ -143,7 +144,7 @@ router.delete('/:id', authenticateToken, async (req: AuthRequest, res: Response)
     const userId = req.user?.id;
 
     if (id !== userId) {
-      return res.status(403).json({ error: 'Access denied' });
+      return res.status(403).json(ErrorResponses.accessDenied());
     }
 
     await prisma.user.delete({
@@ -153,7 +154,7 @@ router.delete('/:id', authenticateToken, async (req: AuthRequest, res: Response)
     res.json({ message: 'User deleted successfully' });
   } catch (error) {
     console.error('Delete user error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json(ErrorResponses.internalServerError());
   }
 });
 
