@@ -14,7 +14,7 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false)
   const auth = useAuth()
   const { registerMutation } = auth || {}
-  const { isLoading: registerLoading, mutateAsync: register, reset: clearErrors, isSuccess: registerSuccess} = registerMutation
+  const { isLoading: registerLoading, mutateAsync: register, reset: clearErrors} = registerMutation
   const navigate = useNavigate()
   const [errors, setErrors] = useState<Record<string, string> | null>(null)
   const handleSubmit = async (e: React.FormEvent) => {

@@ -38,7 +38,7 @@ export default function AudioList() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <div>
+        <div className={styles.headerContent}>
           <h1 className={styles.title}>My Audio Files</h1>
           <p className={styles.subtitle}>
             Manage and play your uploaded audio files.
@@ -63,6 +63,8 @@ export default function AudioList() {
           </div>
           <div className={styles.categorySelect}>
             <select
+              id="category"
+              name="category"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
               className="input"

@@ -45,6 +45,9 @@
   .actionContent {
     @include flex-center;
     
+    @media (max-width: 768px) {
+      justify-content: start;
+    }
     .iconContainer {
       flex-shrink: 0;
       border-radius: $border-radius;
