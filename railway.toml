@@ -9,4 +9,5 @@ restartPolicyType = "on_failure"
 
 [build.steps]
 setup = "cd backend && npm install"
-build = "cd backend && npm run build" 
+build = "cd backend && npm run build"
+copy = "cp -r backend/prisma ./prisma" 
