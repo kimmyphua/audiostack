@@ -16,6 +16,12 @@ import userRoutes from './routes/users';
 // Load environment variables
 dotenv.config();
 
+// Debug: Log environment variables (remove in production)
+console.log('Environment variables:');
+console.log('DATABASE_URL:', process.env.DATABASE_URL ? 'SET' : 'NOT SET');
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('PORT:', process.env.PORT);
+
 const app = express();
 const prisma = new PrismaClient();
 const PORT = process.env.PORT || 5000;
