@@ -7,6 +7,6 @@ healthcheckPath = "/api/health"
 healthcheckTimeout = 300
 restartPolicyType = "on_failure"
 
-[[services]]
-name = "audiostack-backend"
-sourceDir = "backend" 
+[build.steps]
+setup = "cd backend && npm install"
+build = "cd backend && npm run build" 
