@@ -26,6 +26,9 @@ const app = express();
 const prisma = new PrismaClient();
 const PORT = process.env.PORT || 5000;
 
+// Trust proxy for rate limiting behind Railway proxy
+app.set('trust proxy', 1);
+
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -38,7 +41,10 @@ app.use(
   cors({
     origin:
       process.env.NODE_ENV === 'production'
-        ? [process.env.FRONTEND_URL || 'https://yourdomain.com']
+        ? [
+            process.env.FRONTEND_URL || 'https://audiostack-mu.vercel.app',
+            'https://audiostack-qjiu8l7mx-kimberlys-projects-1c46a27b.vercel.app'
+          ]
         : ['http://localhost:3000', 'http://127.0.0.1:3000'],
     credentials: true,
   })
