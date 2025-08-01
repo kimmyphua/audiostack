@@ -21,12 +21,19 @@ $gray-700: #374151;
 $gray-800: #1f2937;
 $gray-900: #111827;
 
+$red-50: #fef2f2;
+$red-100: #fee2e2;
+$red-200: #fecaca;
+$red-300: #fca5a5;
+$red-400: #f87171;
+$red-500: #ef4444;
 $red-600: #dc2626;
 $red-700: #b91c1c;
 $red-800: #991b1b;
 $red-900: #7f1d1d;
 
 $blue-100: #dbeafe;
+$blue-600: #2563eb;
 $blue-800: #1e40af;
 
 // Spacing
@@ -48,11 +55,21 @@ $border-radius-full: 9999px;
 
 // Shadows
 $shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-$shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-$shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+$shadow:
+  0 1px 3px 0 rgb(0 0 0 / 0.1),
+  0 1px 2px -1px rgb(0 0 0 / 0.1);
+$shadow-md:
+  0 4px 6px -1px rgb(0 0 0 / 0.1),
+  0 2px 4px -2px rgb(0 0 0 / 0.1);
 
 // Transitions
-$transition-colors: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, text-decoration-color 0.15s ease-in-out, fill 0.15s ease-in-out, stroke 0.15s ease-in-out;
+$transition-colors:
+  color 0.15s ease-in-out,
+  background-color 0.15s ease-in-out,
+  border-color 0.15s ease-in-out,
+  text-decoration-color 0.15s ease-in-out,
+  fill 0.15s ease-in-out,
+  stroke 0.15s ease-in-out;
 
 // Mixins
 @mixin flex-center {
@@ -96,11 +113,11 @@ $transition-colors: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
   border: none;
   cursor: pointer;
   text-decoration: none;
-  
+
   &:focus {
     @include focus-ring;
   }
-  
+
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -111,7 +128,7 @@ $transition-colors: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
   @extend .btn;
   background-color: $primary-600;
   color: white;
-  
+
   &:hover:not(:disabled) {
     background-color: $primary-700;
   }
@@ -121,7 +138,7 @@ $transition-colors: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
   @extend .btn;
   background-color: $gray-200;
   color: $gray-900;
-  
+
   &:hover:not(:disabled) {
     background-color: $gray-300;
   }
@@ -131,7 +148,7 @@ $transition-colors: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
   @extend .btn;
   background-color: $red-600;
   color: white;
-  
+
   &:hover:not(:disabled) {
     background-color: $red-700;
   }
@@ -145,7 +162,7 @@ $transition-colors: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
   border-radius: $border-radius;
   font-size: 1rem;
   line-height: 1.5;
-  
+
   &:focus {
     border-color: $primary-500;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
@@ -173,4 +190,4 @@ $transition-colors: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
   border: 2px solid $gray-300;
   border-top-color: $primary-600;
   border-radius: 50%;
-} 
+}

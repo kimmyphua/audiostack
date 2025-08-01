@@ -4,7 +4,7 @@
 }
 
 html {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: "Inter", system-ui, sans-serif;
 }
 
 body {
@@ -44,7 +44,9 @@ button {
 }
 
 /* Input reset */
-input, textarea, select {
+input,
+textarea,
+select {
   font: inherit;
   border: none;
   outline: none;
@@ -54,4 +56,4 @@ input, textarea, select {
 a {
   text-decoration: none;
   color: inherit;
-} 
+}

@@ -34,7 +34,12 @@ services:
       - '5001:5000'
     volumes:
       - ./backend/uploads:/app/uploads
-    command: ["sh", "-c", "npx prisma generate && npx prisma db push && node dist/index.js"]
+    command:
+      [
+        'sh',
+        '-c',
+        'npx prisma generate && npx prisma db push && node dist/index.js',
+      ]
     networks:
       - audiostack-network
     restart: unless-stopped
@@ -74,4 +79,4 @@ volumes:
 
 networks:
   audiostack-network:
-    driver: bridge 
+    driver: bridge

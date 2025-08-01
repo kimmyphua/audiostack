@@ -15,16 +15,25 @@
     "start-dev": "bash start-dev.sh",
     "docker:dev": "docker-compose -f docker-compose.dev.yml up -d",
     "docker:dev:down": "docker-compose -f docker-compose.dev.yml down",
-    "docker:dev:logs": "docker-compose -f docker-compose.dev.yml logs -f"
+    "docker:dev:logs": "docker-compose -f docker-compose.dev.yml logs -f",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
-  "keywords": ["audio", "hosting", "react", "nodejs", "typescript"],
+  "keywords": [
+    "audio",
+    "hosting",
+    "react",
+    "nodejs",
+    "typescript"
+  ],
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "prettier": "^3.1.0"
   },
   "workspaces": [
     "frontend",
     "backend"
   ]
-} 
+}

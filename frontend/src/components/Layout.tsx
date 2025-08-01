@@ -1,37 +1,35 @@
-import { useState } from 'react'
-import { Link, Outlet, useLocation } from 'react-router-dom'
-import { NAVIGATION_ITEMS } from '../constants'
-import { useAuth } from '../hooks/useAuth'
-import { getInitials } from '../utils'
-import { Icon } from './Icon'
-import styles from './Layout.module.scss'
+import { useState } from 'react';
+import { Link, Outlet, useLocation } from 'react-router-dom';
+import { NAVIGATION_ITEMS } from '../constants';
+import { useAuth } from '../hooks/useAuth';
+import { getInitials } from '../utils/formatters';
+import { Icon } from './Icon';
+import styles from './Layout.module.scss';
 
 export default function Layout() {
-  const auth = useAuth()
-  const { user, logout } = auth || { user: null, logout: () => {} }
-  const location = useLocation()
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const { user, logout } = useAuth();
 
-  const handleLogout = () => {
-    logout()
-  }
+  const location = useLocation();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div className={styles.container}>
       {/* Mobile sidebar */}
-      <div className={`${styles.mobileSidebar} ${sidebarOpen ? styles.open : styles.closed}`}>
+      <div
+        className={`${styles.mobileSidebar} ${sidebarOpen ? styles.open : styles.closed}`}
+      >
         <div className={styles.overlay} onClick={() => setSidebarOpen(false)} />
         <div className={styles.mobileSidebarContent}>
           <div className={styles.mobileHeader}>
             <h1 className={styles.title}>AudioStack</h1>
             <button onClick={() => setSidebarOpen(false)}>
-              <Icon name="X" className={styles.closeIcon} />
+              <Icon name='X' className={styles.closeIcon} />
             </button>
           </div>
           <nav className={styles.mobileNav}>
             <div className={styles.navList}>
-              {NAVIGATION_ITEMS.map((item) => {
-                const isActive = location.pathname === item.href
+              {NAVIGATION_ITEMS.map(item => {
+                const isActive = location.pathname === item.href;
                 return (
                   <Link
                     key={item.name}
@@ -42,7 +40,7 @@ export default function Layout() {
                     <Icon name={item.icon as any} className={styles.icon} />
                     {item.name}
                   </Link>
-                )
+                );
               })}
             </div>
           </nav>
@@ -59,11 +57,8 @@ export default function Layout() {
                 <p className={styles.username}>{user?.username}</p>
               </div>
             </div>
-            <button
-              onClick={handleLogout}
-              className={styles.logoutButton}
-            >
-              <Icon name="LogOut" className={styles.icon} />
+            <button onClick={logout} className={styles.logoutButton}>
+              <Icon name='LogOut' className={styles.icon} />
               Logout
             </button>
           </div>
@@ -77,8 +72,8 @@ export default function Layout() {
         </div>
         <nav className={styles.desktopNav}>
           <div className={styles.navList}>
-            {NAVIGATION_ITEMS.map((item) => {
-              const isActive = location.pathname === item.href
+            {NAVIGATION_ITEMS.map(item => {
+              const isActive = location.pathname === item.href;
               return (
                 <Link
                   key={item.name}
@@ -88,7 +83,7 @@ export default function Layout() {
                   <Icon name={item.icon as any} className={styles.icon} />
                   {item.name}
                 </Link>
-              )
+              );
             })}
           </div>
         </nav>
@@ -105,11 +100,8 @@ export default function Layout() {
               <p className={styles.username}>{user?.username}</p>
             </div>
           </div>
-          <button
-            onClick={handleLogout}
-            className={styles.logoutButton}
-          >
-            <Icon name="LogOut" className={styles.icon} />
+          <button onClick={logout} className={styles.logoutButton}>
+            <Icon name='LogOut' className={styles.icon} />
             Logout
           </button>
         </div>
@@ -119,11 +111,11 @@ export default function Layout() {
       <div className={styles.mainContent}>
         <div className={styles.topBar}>
           <button
-            type="button"
+            type='button'
             className={styles.menuButton}
             onClick={() => setSidebarOpen(true)}
           >
-            <Icon name="Menu" className={styles.menuIcon} />
+            <Icon name='Menu' className={styles.menuIcon} />
           </button>
         </div>
 
@@ -134,5 +126,5 @@ export default function Layout() {
         </main>
       </div>
     </div>
-  )
-} 
+  );
+}

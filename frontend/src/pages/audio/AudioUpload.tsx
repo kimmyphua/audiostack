@@ -1,47 +1,47 @@
-import { Music, Upload } from 'lucide-react'
-import { AUDIO_CATEGORIES, MAX_FILE_SIZE_MB, SUPPORTED_AUDIO_FORMATS } from '../../constants'
-import { useFileUpload } from './hooks/useFileUpload'
-import { formatFileSize } from '../../utils'
-import styles from './AudioUpload.module.scss'
+import { Music, Upload } from 'lucide-react';
+import { MAX_FILE_SIZE_MB, SUPPORTED_AUDIO_FORMATS } from '../../constants';
+import { formatFileSize } from '../../utils/formatters';
+import styles from './AudioUpload.module.scss';
+import { useFileUpload } from './hooks/useFileUpload';
+import useGetAudioCategories from './hooks/useGetAudioCategories';
 
 export default function AudioUpload() {
   const {
     file,
     description,
     category,
-    uploading,
+    isUploading,
     setDescription,
     setCategory,
     handleFileChange,
-    handleSubmit,
+    handleUploadAudio,
     removeFile,
-  } = useFileUpload()
-
+  } = useFileUpload();
+  const { categories } = useGetAudioCategories();
   return (
     <div className={styles.container}>
       <div className={styles.header}>
         <h1 className={styles.title}>Upload Audio File</h1>
         <p className={styles.subtitle}>
-          Upload your audio files and organize them with categories and descriptions.
+          Upload your audio files and organize them with categories and
+          descriptions.
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className={styles.form}>
+      <form className={styles.form}>
         <div className={styles.uploadCard}>
           <div className={styles.uploadContent}>
             <div className={styles.fileUpload}>
-              <label className={styles.label}>
-                Audio File
-              </label>
+              <label className={styles.label}>Audio File</label>
               <div className={styles.dropzone}>
                 <input
-                  type="file"
+                  type='file'
                   accept={SUPPORTED_AUDIO_FORMATS.join(',')}
                   onChange={handleFileChange}
                   className={styles.input}
-                  id="audio-file"
+                  id='audio-file'
                 />
-                <label htmlFor="audio-file" className={styles.label}>
+                <label htmlFor='audio-file' className={styles.label}>
                   {file ? (
                     <div className={styles.fileInfo}>
                       <Music className={styles.icon} />
@@ -50,10 +50,10 @@ export default function AudioUpload() {
                         {formatFileSize(file.size)}
                       </p>
                       <button
-                        type="button"
-                        onClick={(e) => {
-                          e.preventDefault()
-                          removeFile()
+                        type='button'
+                        onClick={e => {
+                          e.preventDefault();
+                          removeFile();
                         }}
                         className={styles.removeButton}
                       >
@@ -63,11 +63,10 @@ export default function AudioUpload() {
                   ) : (
                     <div className={styles.uploadPrompt}>
                       <Upload className={styles.icon} />
-                      <p className={styles.title}>
-                        Click to select audio file
-                      </p>
+                      <p className={styles.title}>Click to select audio file</p>
                       <p className={styles.description}>
-                        MP3, WAV, OGG, AAC, FLAC, MP4, WEBM up to {MAX_FILE_SIZE_MB}MB
+                        MP3, WAV, OGG, AAC, FLAC, MP4, WEBM up to{' '}
+                        {MAX_FILE_SIZE_MB}MB
                       </p>
                     </div>
                   )}
@@ -76,16 +75,16 @@ export default function AudioUpload() {
             </div>
 
             <div className={styles.formGroup}>
-              <label htmlFor="category" className={styles.label}>
+              <label htmlFor='category' className={styles.label}>
                 Category
               </label>
               <select
-                id="category"
+                id='category'
                 value={category}
-                onChange={(e) => setCategory(e.target.value)}
+                onChange={e => setCategory(e.target.value)}
                 className={styles.select}
               >
-                {AUDIO_CATEGORIES.map((cat) => (
+                {categories?.map((cat: string) => (
                   <option key={cat} value={cat}>
                     {cat}
                   </option>
@@ -94,16 +93,16 @@ export default function AudioUpload() {
             </div>
 
             <div className={styles.formGroup}>
-              <label htmlFor="description" className={styles.label}>
+              <label htmlFor='description' className={styles.label}>
                 Description (optional)
               </label>
               <textarea
-                id="description"
+                id='description'
                 rows={3}
                 value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                onChange={e => setDescription(e.target.value)}
                 className={styles.textarea}
-                placeholder="Describe your audio file..."
+                placeholder='Describe your audio file...'
               />
             </div>
           </div>
@@ -111,21 +110,22 @@ export default function AudioUpload() {
 
         <div className={styles.actions}>
           <button
-            type="button"
+            type='button'
             onClick={() => window.history.back()}
-            className="btn-secondary"
+            className='btn-secondary'
           >
             Cancel
           </button>
           <button
-            type="submit"
-            disabled={!file || uploading}
-            className="btn-primary"
+            onClick={() => handleUploadAudio()}
+            type='button'
+            disabled={!file || isUploading}
+            className='btn-primary'
           >
-            {uploading ? 'Uploading...' : 'Upload Audio'}
+            {isUploading ? 'Uploading...' : 'Upload Audio'}
           </button>
         </div>
       </form>
     </div>
-  )
-} 
+  );
+}

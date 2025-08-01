@@ -1,4 +1,4 @@
-@use './styles/globals.scss' as *;
+@use "./styles/globals.scss" as *;
 
 .loadingContainer {
   min-height: 100vh;
@@ -12,4 +12,4 @@
   width: 8rem;
   border: 2px solid $gray-300;
   border-top-color: $primary-600;
-} 
+}

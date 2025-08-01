@@ -1,69 +1,98 @@
-import { useState } from 'react'
-import toast from 'react-hot-toast'
-import { Link, useNavigate } from 'react-router-dom'
-import { Icon } from '../../components/Icon'
-import { useAuth } from '../../hooks/useAuth'
-import getErrorMessages from '../../hooks/getErrorMessages'
-import styles from './Register.module.scss'
-import { AxiosError } from 'axios'
+import { AxiosError } from 'axios';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { Link, useNavigate } from 'react-router-dom';
+import { Icon } from '../../components/Icon';
+import getErrorMessages from '../../utils/getErrorMessages';
+import styles from './Register.module.scss';
+import { useMutation, useQueryClient } from 'react-query';
+import { API_ENDPOINTS } from '../../constants';
+import { api } from '../../lib/api';
+import { storage } from '../../utils/apiHelpers';
 
 export default function Register() {
-  const [username, setUsername] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
-  const auth = useAuth()
-  const { registerMutation } = auth || {}
-  const { isLoading: registerLoading, mutateAsync: register, reset: clearErrors} = registerMutation
-  const navigate = useNavigate()
-  const [errors, setErrors] = useState<Record<string, string> | null>(null)
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    try {
-      await register({username, password, email}) 
-        toast.success('Registration successful!')
-        navigate('/dashboard')
-    } catch (error) {
-      console.log({ error });
-      setErrors(getErrorMessages(error as AxiosError<any>))
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const queryClient = useQueryClient();
+
+  const navigate = useNavigate();
+  const [errors, setErrors] = useState<Record<string, string> | null>(null);
+  const {
+    mutate: register,
+    isLoading: registerLoading,
+    reset: clearErrors,
+  } = useMutation(
+    async ({
+      username,
+      password,
+      email,
+    }: {
+      username: string;
+      password: string;
+      email: string;
+    }) => {
+      const response = await api.post(API_ENDPOINTS.AUTH.REGISTER, {
+        username,
+        password,
+        email,
+      });
+      const { token, user } = response.data;
+
+      if (!token) {
+        throw new Error('No token received from server');
+      }
+
+      storage.set('token', token);
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      return { token, user };
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['user']);
+        toast.success(`Registration successful! Welcome ${username} 🥳`);
+        navigate('/dashboard');
+      },
+      onError: (error: any) => {
+        console.error('Register error:', error);
+        setErrors(getErrorMessages(error as AxiosError<any>));
+      },
     }
-  }
-console.log({errors,username: errors?.username });
+  );
 
   return (
     <div className={styles.container}>
       <div className={styles.formContainer}>
         <div className={styles.header}>
           <div className={styles.iconContainer}>
-            <Icon name="Music" className={styles.icon} />
+            <Icon name='Music' className={styles.icon} />
           </div>
-          <h2 className={styles.title}>
-            Create your account
-          </h2>
+          <h2 className={styles.title}>Create your account</h2>
           <p className={styles.subtitle}>
             Or{' '}
-            <Link to="/login" className={styles.link}>
+            <Link to='/login' className={styles.link}>
               sign in to your existing account
             </Link>
           </p>
         </div>
-        <form className={styles.form} onSubmit={handleSubmit}>
+        <form className={styles.form}>
           <div className={styles.formGroup}>
             <div className={styles.inputGroup}>
-              <label htmlFor="username" className={styles.label}>
+              <label htmlFor='username' className={styles.label}>
                 Username
               </label>
               <input
-                id="username"
-                name="username"
-                type="text"
+                id='username'
+                name='username'
+                type='text'
                 required
                 className={`${styles.input} ${errors?.username ? styles.error : ''}`}
-                placeholder="Enter username"
+                placeholder='Enter username'
                 value={username}
-                onChange={(e) => {
-                  setUsername(e.target.value)
-                  clearErrors()
+                onChange={e => {
+                  setUsername(e.target.value);
+                  clearErrors();
                 }}
               />
               {errors?.username && (
@@ -71,20 +100,20 @@ console.log({errors,username: errors?.username });
               )}
             </div>
             <div className={styles.inputGroup}>
-              <label htmlFor="email" className={styles.label}>
+              <label htmlFor='email' className={styles.label}>
                 Email
               </label>
               <input
-                id="email"
-                name="email"
-                type="email"
+                id='email'
+                name='email'
+                type='email'
                 required
                 className={`${styles.input} ${errors?.email ? styles.error : ''}`}
-                placeholder="Enter email"
+                placeholder='Enter email'
                 value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value)
-               clearErrors()
+                onChange={e => {
+                  setEmail(e.target.value);
+                  clearErrors();
                 }}
               />
               {errors?.email && (
@@ -92,33 +121,29 @@ console.log({errors,username: errors?.username });
               )}
             </div>
             <div className={styles.inputGroup}>
-              <label htmlFor="password" className={styles.label}>
+              <label htmlFor='password' className={styles.label}>
                 Password
               </label>
               <div className={styles.passwordContainer}>
                 <input
-                  id="password"
-                  name="password"
+                  id='password'
+                  name='password'
                   type={showPassword ? 'text' : 'password'}
                   required
                   className={`${styles.input} ${errors?.password ? styles.error : ''}`}
-                  placeholder="Enter password"
+                  placeholder='Enter password'
                   value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value)
-                    clearErrors()
+                  onChange={e => {
+                    setPassword(e.target.value);
+                    clearErrors();
                   }}
                 />
                 <button
-                  type="button"
+                  type='button'
                   className={styles.toggleButton}
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  {showPassword ? (
-                    <Icon name="EyeOff" />
-                  ) : (
-                    <Icon name="Eye" />
-                  )}
+                  {showPassword ? <Icon name='EyeOff' /> : <Icon name='Eye' />}
                 </button>
               </div>
               {errors?.password && (
@@ -128,7 +153,8 @@ console.log({errors,username: errors?.username });
           </div>
 
           <button
-            type="submit"
+            type='submit'
+            onClick={() => register({ username, password, email })}
             disabled={registerLoading}
             className={styles.submitButton}
           >
@@ -137,5 +163,5 @@ console.log({errors,username: errors?.username });
         </form>
       </div>
     </div>
-  )
-} 
+  );
+}

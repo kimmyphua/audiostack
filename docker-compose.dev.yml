@@ -16,7 +16,7 @@ services:
       - audiostack-network
 
   backend:
-    build: 
+    build:
       context: ./backend
       dockerfile: Dockerfile.dev
     depends_on:
@@ -38,12 +38,17 @@ services:
       - ./backend:/app
       - /app/node_modules
       - ./backend/uploads:/app/uploads
-    command: ["sh", "-c", "npx prisma generate && npx prisma migrate deploy && npx prisma db push && npx nodemon src/index.ts"]
+    command:
+      [
+        'sh',
+        '-c',
+        'npx prisma generate && npx prisma migrate deploy && npx prisma db push && npx nodemon src/index.ts',
+      ]
     networks:
       - audiostack-network
 
   frontend:
-    build: 
+    build:
       context: ./frontend
       dockerfile: Dockerfile.dev
     depends_on:
@@ -63,4 +68,4 @@ volumes:
 
 networks:
   audiostack-network:
-    driver: bridge 
+    driver: bridge

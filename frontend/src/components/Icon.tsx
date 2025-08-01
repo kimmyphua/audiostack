@@ -14,8 +14,8 @@ import {
   User,
   Volume2,
   X,
-} from 'lucide-react'
-import { IconMap } from '../types'
+} from 'lucide-react';
+import { IconMap } from '../types';
 
 const iconMap: IconMap = {
   Home,
@@ -33,20 +33,20 @@ const iconMap: IconMap = {
   Pause,
   Play,
   Volume2,
-}
+};
 
 interface IconProps {
-  name: keyof typeof iconMap
-  className?: string
+  name: keyof typeof iconMap;
+  className?: string;
 }
 
 export const Icon = ({ name, className = '' }: IconProps) => {
-  const IconComponent = iconMap[name]
-  
+  const IconComponent = iconMap[name];
+
   if (!IconComponent) {
-    console.warn(`Icon "${name}" not found`)
-    return null
+    console.warn(`Icon "${name}" not found`);
+    return null;
   }
-  
-  return <IconComponent className={className} />
-} 
+
+  return <IconComponent className={className} />;
+};

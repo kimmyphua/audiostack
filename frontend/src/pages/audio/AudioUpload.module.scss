@@ -1,4 +1,4 @@
-@use '../../styles/globals.scss' as *;
+@use "../../styles/globals.scss" as *;
 
 .container {
   max-width: 42rem;
@@ -7,14 +7,14 @@
 
 .header {
   margin-bottom: $spacing-6;
-  
+
   .title {
     font-size: 1.875rem;
     font-weight: 700;
     color: $gray-900;
     margin: 0;
   }
-  
+
   .subtitle {
     margin-top: $spacing-1;
     font-size: 0.875rem;
@@ -29,7 +29,7 @@
 
 .uploadCard {
   @extend .card;
-  
+
   .uploadContent {
     @include flex-col;
     gap: $spacing-4;
@@ -44,83 +44,83 @@
     color: $gray-700;
     margin-bottom: $spacing-2;
   }
-  
+
   .dropzone {
     border: 2px dashed $gray-300;
     border-radius: $border-radius;
     padding: $spacing-6;
     text-align: center;
     transition: border-color 0.2s ease-in-out;
-    
+
     &:hover {
       border-color: $primary-400;
     }
-    
+
     .input {
       display: none;
     }
-    
+
     .label {
       cursor: pointer;
       margin: 0;
     }
   }
-  
+
   .fileInfo {
     @include flex-col;
     gap: $spacing-2;
-    
+
     .icon {
       margin: 0 auto;
       height: 3rem;
       width: 3rem;
       color: $primary-600;
     }
-    
+
     .fileName {
       font-size: 0.875rem;
       font-weight: 500;
       color: $gray-900;
       margin: 0;
     }
-    
+
     .fileSize {
       font-size: 0.75rem;
       color: $gray-500;
       margin: 0;
     }
-    
+
     .removeButton {
       font-size: 0.75rem;
       color: $red-600;
       background: none;
       border: none;
       cursor: pointer;
-      
+
       &:hover {
         color: $red-800;
       }
     }
   }
-  
+
   .uploadPrompt {
     @include flex-col;
     gap: $spacing-2;
-    
+
     .icon {
       margin: 0 auto;
       height: 3rem;
       width: 3rem;
       color: $gray-400;
     }
-    
+
     .title {
       font-size: 0.875rem;
       font-weight: 500;
       color: $gray-900;
       margin: 0;
     }
-    
+
     .description {
       font-size: 0.75rem;
       color: $gray-500;
@@ -137,12 +137,14 @@
     color: $gray-700;
     margin-bottom: $spacing-1;
   }
-  
-  .input, .select, .textarea {
+
+  .input,
+  .select,
+  .textarea {
     @extend .input;
     margin-top: $spacing-1;
   }
-  
+
   .textarea {
     resize: vertical;
     min-height: 6rem;
@@ -153,4 +155,4 @@
   @include flex-center;
   justify-content: flex-end;
   gap: $spacing-3;
-} 
+}

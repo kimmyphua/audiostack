@@ -1,4 +1,4 @@
-@use '../styles/globals.scss' as *;
+@use "../styles/globals.scss" as *;
 
 .container {
   min-height: 100vh;
@@ -10,15 +10,15 @@
   position: fixed;
   inset: 0;
   z-index: 50;
-  
+
   @media (min-width: 768px) {
     display: none;
   }
-  
+
   &.open {
     display: block;
   }
-  
+
   &.closed {
     display: none;
   }
@@ -45,7 +45,7 @@
   justify-content: space-between;
   height: 4rem;
   padding: 0 $spacing-4;
-  
+
   .title {
     font-size: 1.25rem;
     font-weight: 700;
@@ -56,7 +56,7 @@
 .mobileNav {
   flex: 1;
   padding: $spacing-2 $spacing-4;
-  
+
   .navList {
     @include flex-col;
     gap: $spacing-1;
@@ -66,20 +66,20 @@
 .mobileUserSection {
   border-top: 1px solid $gray-200;
   padding: $spacing-4;
-  
+
   .userInfo {
     @include flex-center;
-    
+
     .avatar {
       flex-shrink: 0;
-      
+
       .avatarCircle {
         @include flex-center;
         height: 2rem;
         width: 2rem;
         border-radius: $border-radius-full;
         background-color: $primary-600;
-        
+
         .avatarText {
           font-size: 0.875rem;
           font-weight: 500;
@@ -87,10 +87,10 @@
         }
       }
     }
-    
+
     .userDetails {
       margin-left: $spacing-3;
-      
+
       .username {
         font-size: 0.875rem;
         font-weight: 500;
@@ -98,7 +98,7 @@
       }
     }
   }
-  
+
   .logoutButton {
     @include flex-center;
     width: 100%;
@@ -108,7 +108,7 @@
     font-weight: 500;
     color: $gray-600;
     border-radius: $border-radius;
-    
+
     &:hover {
       background-color: $gray-50;
       color: $gray-900;
@@ -124,7 +124,7 @@
   @include flex-col;
   background-color: white;
   border-right: 1px solid $gray-200;
-  
+
   @media (max-width: 769px) {
     display: none;
   }
@@ -134,7 +134,7 @@
   @include flex-center;
   height: 4rem;
   padding: 0 $spacing-4;
-  
+
   .title {
     font-size: 1.25rem;
     font-weight: 700;
@@ -145,7 +145,7 @@
 .desktopNav {
   flex: 1;
   padding: $spacing-2 $spacing-4;
-  
+
   .navList {
     @include flex-col;
     gap: $spacing-1;
@@ -155,20 +155,20 @@
 .desktopUserSection {
   border-top: 1px solid $gray-200;
   padding: $spacing-4;
-  
+
   .userInfo {
     @include flex-center;
-    
+
     .avatar {
       flex-shrink: 0;
-      
+
       .avatarCircle {
         @include flex-center;
         height: 2rem;
         width: 2rem;
         border-radius: $border-radius-full;
         background-color: $primary-600;
-        
+
         .avatarText {
           font-size: 0.875rem;
           font-weight: 500;
@@ -176,10 +176,10 @@
         }
       }
     }
-    
+
     .userDetails {
       margin-left: $spacing-3;
-      
+
       .username {
         font-size: 0.875rem;
         font-weight: 500;
@@ -187,7 +187,7 @@
       }
     }
   }
-  
+
   .logoutButton {
     @include flex-center;
     width: 100%;
@@ -197,7 +197,7 @@
     font-weight: 500;
     color: $gray-600;
     border-radius: $border-radius;
-    
+
     &:hover {
       background-color: $gray-50;
       color: $gray-900;
@@ -213,17 +213,17 @@
   border-radius: $border-radius;
   color: $gray-600;
   text-decoration: none;
-  
+
   &:hover {
     background-color: $gray-50;
     color: $gray-900;
   }
-  
+
   &.active {
     background-color: $primary-100;
     color: $primary-900;
   }
-  
+
   .icon {
     margin-right: $spacing-3;
     height: 1.25rem;
@@ -233,7 +233,7 @@
 
 .mainContent {
   padding-left: 16rem;
-  
+
   @media (max-width: 768px) {
     padding-left: 0;
   }
@@ -253,20 +253,20 @@
   background-color: white;
   box-shadow: $shadow-sm;
   padding: 0 $spacing-4;
-  
+
   @media (min-width: 640px) {
     gap: $spacing-6;
     padding: 0 $spacing-6;
   }
-  
+
   @media (min-width: 768px) {
     padding: 0 $spacing-8;
   }
-  
+
   .menuButton {
     padding: $spacing-2.5;
     color: $gray-700;
-    
+
     @media (min-width: 768px) {
       display: none;
     }
@@ -275,16 +275,16 @@
 
 .content {
   padding: $spacing-6 0;
-  
+
   .contentInner {
     max-width: 80rem;
     margin: 0 auto;
     padding: 0 $spacing-4;
-    
+
     @media (min-width: 640px) {
       padding: 0 $spacing-6;
     }
-    
+
     @media (min-width: 768px) {
       padding: 0 $spacing-8;
     }
@@ -304,4 +304,4 @@
 .menuIcon {
   height: 1.5rem;
   width: 1.5rem;
-} 
+}

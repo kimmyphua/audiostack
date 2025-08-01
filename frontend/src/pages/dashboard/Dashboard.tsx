@@ -1,12 +1,11 @@
-import { Link } from 'react-router-dom'
-import { Icon } from '../../components/Icon'
-import { GETTING_STARTED_STEPS, QUICK_ACTIONS } from '../../constants'
-import { useAuth } from '../../hooks/useAuth'
-import styles from './Dashboard.module.scss'
+import { Link } from 'react-router-dom';
+import { Icon } from '../../components/Icon';
+import { GETTING_STARTED_STEPS, QUICK_ACTIONS } from '../../constants';
+import { useAuth } from '../../hooks/useAuth';
+import styles from './Dashboard.module.scss';
 
 export default function Dashboard() {
-  const auth = useAuth()
-  const { user } = auth || { user: null }
+  const { user } = useAuth();
 
   return (
     <div className={styles.container}>
@@ -18,14 +17,16 @@ export default function Dashboard() {
       </div>
 
       <div className={styles.quickActions}>
-        {QUICK_ACTIONS.map((action) => (
+        {QUICK_ACTIONS.map(action => (
           <Link
             key={action.name}
             to={action.href}
             className={styles.actionCard}
           >
             <div className={styles.actionContent}>
-              <div className={`${styles.iconContainer} ${styles[action.color]}`}>
+              <div
+                className={`${styles.iconContainer} ${styles[action.color]}`}
+              >
                 <Icon name={action.icon as any} className={styles.icon} />
               </div>
               <div className={styles.actionDetails}>
@@ -40,7 +41,7 @@ export default function Dashboard() {
       <div className={styles.gettingStarted}>
         <h2 className={styles.title}>Getting Started</h2>
         <div className={styles.steps}>
-          {GETTING_STARTED_STEPS.map((step) => (
+          {GETTING_STARTED_STEPS.map(step => (
             <div key={step.number} className={styles.step}>
               <div className={styles.stepNumber}>
                 <div className={styles.numberCircle}>
@@ -49,7 +50,8 @@ export default function Dashboard() {
               </div>
               <div className={styles.stepContent}>
                 <p className={styles.stepText}>
-                  <span className={styles.highlight}>{step.text}</span> - {step.description}
+                  <span className={styles.highlight}>{step.text}</span> -{' '}
+                  {step.description}
                 </p>
               </div>
             </div>
@@ -57,5 +59,5 @@ export default function Dashboard() {
         </div>
       </div>
     </div>
-  )
-} 
+  );
+}

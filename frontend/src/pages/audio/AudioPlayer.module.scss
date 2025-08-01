@@ -1,4 +1,4 @@
-@use '../../styles/globals.scss' as *;
+@use "../../styles/globals.scss" as *;
 
 .container {
   max-width: 64rem;
@@ -10,35 +10,63 @@
 .header {
   @include flex-center;
   gap: $spacing-4;
-  justify-content: flex-start;
-  
+  justify-content: space-between;
+
   .backButton {
     color: $gray-600;
-    
+
     &:hover {
       color: $gray-900;
     }
   }
-  
+
+  .backIcon {
+    height: 1.25rem;
+    width: 1.25rem;
+  }
+
   .headerContent {
+    flex: 1;
+    text-align: center;
+
     .title {
       font-size: 1.5rem;
       font-weight: 700;
       color: $gray-900;
       margin: 0;
     }
-    
+
     .subtitle {
       font-size: 0.875rem;
       color: $gray-500;
       margin: 0;
     }
   }
+
+  .actions {
+    @include flex-center;
+    gap: $spacing-1;
+  }
+  .editButton {
+    color: $blue-600;
+
+    &:hover {
+      color: $blue-800;
+    }
+  }
+}
+
+.deleteButton {
+  color: $red-700;
+
+  &:hover {
+    color: $red-900;
+  }
 }
 
 .playerCard {
   @extend .card;
-  
+
   .playerContent {
     @include flex-col;
     gap: $spacing-6;
@@ -50,26 +78,26 @@
   padding-bottom: $spacing-4;
   @include flex-col;
   align-items: center;
-  
+
   .fileName {
     font-size: 1.125rem;
     font-weight: 500;
     color: $gray-900;
     margin: 0 0 $spacing-2 0;
   }
-  
+
   .fileDescription {
     font-size: 0.875rem;
     color: $gray-600;
     margin: 0 0 $spacing-2 0;
   }
-  
+
   .fileMeta {
     @include flex-center;
     gap: $spacing-4;
     font-size: 0.875rem;
     color: $gray-500;
-    
+
     .category {
       display: inline-flex;
       padding: $spacing-1 $spacing-2;
@@ -79,8 +107,9 @@
       background-color: $blue-100;
       color: $blue-800;
     }
-    
-    .fileSize, .uploadDate {
+
+    .fileSize,
+    .uploadDate {
       font-size: 0.875rem;
       color: $gray-500;
     }
@@ -98,7 +127,7 @@
   @include flex-center;
   gap: $spacing-4;
   width: 100%;
-  
+
   .playButton {
     flex-shrink: 0;
     width: 3rem;
@@ -107,22 +136,22 @@
     color: white;
     border-radius: $border-radius-full;
     @include flex-center;
-    
+
     &:hover {
       background-color: $primary-700;
     }
-    
+
     .playIcon {
       height: 1.25rem;
       width: 1.25rem;
     }
   }
-  
+
   .progressSection {
     flex: 1;
     @include flex-col;
     gap: $spacing-2;
-    
+
     .progressBar {
       width: 100%;
       height: 0.5rem;
@@ -130,7 +159,7 @@
       border-radius: $border-radius-lg;
       appearance: none;
       cursor: pointer;
-      
+
       &::-webkit-slider-thumb {
         appearance: none;
         height: 1rem;
@@ -139,7 +168,7 @@
         background: $primary-600;
         cursor: pointer;
       }
-      
+
       &::-moz-range-thumb {
         height: 1rem;
         width: 1rem;
@@ -149,24 +178,24 @@
         border: none;
       }
     }
-    
+
     .timeDisplay {
       @include flex-between;
       font-size: 0.75rem;
       color: $gray-500;
     }
   }
-  
+
   .volumeSection {
     @include flex-center;
     gap: $spacing-2;
-    
+
     .volumeIcon {
       height: 1rem;
       width: 1rem;
       color: $gray-400;
     }
-    
+
     .volumeSlider {
       width: 5rem;
       height: 0.5rem;
@@ -174,7 +203,7 @@
       border-radius: $border-radius-lg;
       appearance: none;
       cursor: pointer;
-      
+
       &::-webkit-slider-thumb {
         appearance: none;
         height: 1rem;
@@ -183,7 +212,7 @@
         background: $primary-600;
         cursor: pointer;
       }
-      
+
       &::-moz-range-thumb {
         height: 1rem;
         width: 1rem;
@@ -199,7 +228,7 @@
 .loadingContainer {
   @include flex-center;
   height: 16rem;
-  
+
   .spinner {
     height: 2rem;
     width: 2rem;
@@ -209,21 +238,21 @@
 .errorContainer {
   text-align: center;
   padding: $spacing-12 $spacing-4;
-  
+
   .errorTitle {
     font-size: 1.125rem;
     font-weight: 500;
     color: $gray-900;
     margin: 0 0 $spacing-1 0;
   }
-  
+
   .errorDescription {
     font-size: 0.875rem;
     color: $gray-500;
     margin: 0 0 $spacing-6 0;
   }
-  
+
   .backButton {
     @extend .btn-primary;
   }
-} 
+}

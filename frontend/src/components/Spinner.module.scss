@@ -1,0 +1,30 @@
+@import "../styles/globals.scss";
+
+.spinner {
+  animation: spin 1s linear infinite;
+  border: 2px solid $gray-300;
+  border-top-color: $primary-600;
+  border-radius: 50%;
+  display: inline-block;
+
+  &.small {
+    height: 1rem;
+    width: 1rem;
+  }
+
+  &.medium {
+    height: 2rem;
+    width: 2rem;
+  }
+
+  &.large {
+    height: 3rem;
+    width: 3rem;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

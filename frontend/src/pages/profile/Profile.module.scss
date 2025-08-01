@@ -1,4 +1,4 @@
-@use '../../styles/globals.scss' as *;
+@use "../../styles/globals.scss" as *;
 
 .container {
   max-width: 36rem;
@@ -7,14 +7,14 @@
 
 .header {
   margin-bottom: $spacing-6;
-  
+
   .title {
     font-size: 1.875rem;
     font-weight: 700;
     color: $gray-900;
     margin: 0;
   }
-  
+
   .subtitle {
     margin-top: $spacing-1;
     font-size: 0.875rem;
@@ -38,7 +38,7 @@
     color: $gray-700;
     margin-bottom: $spacing-1;
   }
-  
+
   .input {
     @extend .input;
     margin-top: $spacing-1;
@@ -73,10 +73,10 @@
 
 .saveButton {
   @extend .btn-primary;
-} 
+}
 
 .errorMessage {
   margin-top: $spacing-1;
   font-size: 0.875rem;
   color: $red-600;
-} 
+}
