@@ -37,20 +37,31 @@ const limiter = rateLimit({
 
 // Middleware
 app.use(helmet());
+
+// CORS configuration - must come before rate limiting
 app.use(
   cors({
-    origin:
-      process.env.NODE_ENV === 'production'
-        ? [
-            process.env.FRONTEND_URL || 'https://audiostack-mu.vercel.app',
-            'https://audiostack-qjiu8l7mx-kimberlys-projects-1c46a27b.vercel.app'
-          ]
-        : ['http://localhost:3000', 'http://127.0.0.1:3000'],
+    origin: [
+      'http://localhost:3000',
+      'http://127.0.0.1:3000',
+      'https://audiostack-mu.vercel.app',
+      'https://audiostack-qjiu8l7mx-kimberlys-projects-1c46a27b.vercel.app',
+      'https://audiostack-rm5r3j7ai-kimberlys-projects-1c46a27b.vercel.app',
+      /^https:\/\/audiostack-.*-kimberlys-projects-.*\.vercel\.app$/, // Allow all Vercel preview URLs
+      ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : [])
+    ],
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
   })
 );
+
 app.use(limiter);
 app.use(morgan('combined'));
+
+// Handle preflight requests
+app.options('*', cors());
+
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
