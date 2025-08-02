@@ -15,13 +15,6 @@ import userRoutes from './routes/users';
 
 // Load environment variables
 dotenv.config();
-
-// Debug: Log environment variables (remove in production)
-console.log('Environment variables:');
-console.log('DATABASE_URL:', process.env.DATABASE_URL ? 'SET' : 'NOT SET');
-console.log('NODE_ENV:', process.env.NODE_ENV);
-console.log('PORT:', process.env.PORT);
-
 const app = express();
 const prisma = new PrismaClient();
 const PORT = process.env.PORT || 5000;
@@ -42,17 +35,19 @@ app.use(helmet());
 app.use(
   cors({
     origin: [
+      // Development
       'http://localhost:3000',
       'http://127.0.0.1:3000',
+      // Production
       'https://audiostack-mu.vercel.app',
-      'https://audiostack-qjiu8l7mx-kimberlys-projects-1c46a27b.vercel.app',
-      'https://audiostack-rm5r3j7ai-kimberlys-projects-1c46a27b.vercel.app',
-      /^https:\/\/audiostack-.*-kimberlys-projects-.*\.vercel\.app$/, // Allow all Vercel preview URLs
-      ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : [])
+      // All Vercel preview URLs
+      /^https:\/\/audiostack-.*-kimberlys-projects-.*\.vercel\.app$/,
+      // Environment variable (if set)
+      ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : []),
     ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   })
 );
 

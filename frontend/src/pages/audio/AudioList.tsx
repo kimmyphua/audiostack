@@ -33,7 +33,11 @@ export default function AudioList() {
   };
 
   if (isLoadingAudioFiles) {
-    return <Spinner />;
+    return (
+      <div className={styles.loadingContainer}>
+        <Spinner size='large' />
+      </div>
+    );
   }
 
   return (

@@ -225,16 +225,6 @@
   }
 }
 
-.loadingContainer {
-  @include flex-center;
-  height: 16rem;
-
-  .spinner {
-    height: 2rem;
-    width: 2rem;
-  }
-}
-
 .errorContainer {
   text-align: center;
   padding: $spacing-12 $spacing-4;

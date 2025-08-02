@@ -74,7 +74,6 @@ function handleAuthenticationError(
   errorData?: ErrorResponse
 ): Record<string, string> | null {
   const errorMessage = errorData?.message || 'Invalid credentials 🤷‍♀️';
-  console.log({ errorData });
 
   // For login, we typically want to show the error on both username and password fields
   // since we don't know which one is wrong

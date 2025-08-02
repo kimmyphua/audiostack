@@ -57,7 +57,11 @@ export default function AudioEdit() {
   });
 
   if (isLoadingAudioFile) {
-    return <Spinner />;
+    return (
+      <div className={styles.loadingContainer}>
+        <Spinner size='large' />
+      </div>
+    );
   }
 
   if (!audioFile) {
@@ -148,6 +152,7 @@ export default function AudioEdit() {
                 type='button'
                 onClick={() => navigate(`/player/${audioFile.id}`)}
                 className='btn-secondary'
+                disabled={isSaving}
               >
                 Cancel
               </button>

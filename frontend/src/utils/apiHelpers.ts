@@ -2,7 +2,9 @@
 export const getApiBaseUrl = (): string => {
   // In production (update this with your Railway backend URL)
   if (window.location.hostname !== 'localhost') {
-    console.log('Using production API URL: https://audiostack-production.up.railway.app/api');
+    console.log(
+      'Using production API URL: https://audiostack-production.up.railway.app/api'
+    );
     return 'https://audiostack-production.up.railway.app/api';
   }
 

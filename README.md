@@ -2,6 +2,15 @@
 
 A full-stack audio file hosting web application built with React, Node.js, and TypeScript. Upload, manage, and stream your audio files with a modern, responsive interface.
 
+## 🌐 Live Demo
+
+**🎯 [Try AudioStack Live](https://audiostack-mu.vercel.app/)**
+
+- **Demo Credentials**: `admin` / `admin123`
+- **Features**: Upload, play, and manage audio files
+- **Backend**: Deployed on Railway
+- **Frontend**: Deployed on Vercel
+
 ## ✨ Features
 
 - 🎵 **Audio File Upload** - Support for multiple audio formats (MP3, WAV, OGG, MP4, AAC, FLAC, WebM)
@@ -16,6 +25,7 @@ A full-stack audio file hosting web application built with React, Node.js, and T
 ## 🛠️ Tech Stack
 
 ### Frontend
+
 - **React 18** - UI framework
 - **TypeScript** - Type safety
 - **Vite** - Build tool and dev server
@@ -27,6 +37,7 @@ A full-stack audio file hosting web application built with React, Node.js, and T
 - **React Hot Toast** - Notifications
 
 ### Backend
+
 - **Node.js** - Runtime environment
 - **Express.js** - Web framework
 - **TypeScript** - Type safety
@@ -42,6 +53,7 @@ A full-stack audio file hosting web application built with React, Node.js, and T
 - **Rate Limiting** - API protection
 
 ### DevOps
+
 - **Docker** - Containerization
 - **Docker Compose** - Multi-container orchestration
 - **Nodemon** - Development auto-restart
@@ -49,23 +61,26 @@ A full-stack audio file hosting web application built with React, Node.js, and T
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js 18+ 
+
+- Node.js 18+
 - Docker and Docker Compose
 - Git
 
 ### Option 1: Docker (Recommended)
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd audiostack
    ```
 
 2. **Start development environment**
+
    ```bash
    # Using the convenience script (recommended)
    npm run start-dev
-   
+
    # Or manually (requires build step)
    docker-compose -f docker-compose.dev.yml build
    docker-compose -f docker-compose.dev.yml up -d
@@ -79,11 +94,13 @@ A full-stack audio file hosting web application built with React, Node.js, and T
 ### Option 2: Local Development
 
 1. **Install dependencies**
+
    ```bash
    npm run install:all
    ```
 
 2. **Set up environment variables**
+
    ```bash
    # Backend (.env)
    cp backend/.env.example backend/.env
@@ -91,10 +108,11 @@ A full-stack audio file hosting web application built with React, Node.js, and T
    ```
 
 3. **Set up database**
+
    ```bash
    # Database is automatically set up when using Docker
    # No manual setup required!
-   
+
    # If running locally (without Docker):
    cd backend
    npm run db:generate
@@ -102,10 +120,11 @@ A full-stack audio file hosting web application built with React, Node.js, and T
    ```
 
 4. **Start development servers**
+
    ```bash
    # Start both frontend and backend
    npm run dev
-   
+
    # Or start individually
    npm run dev:frontend  # Frontend on port 3000
    npm run dev:backend   # Backend on port 5001
@@ -114,6 +133,7 @@ A full-stack audio file hosting web application built with React, Node.js, and T
 ## 📋 Available Scripts
 
 ### Root Level
+
 ```bash
 npm run dev                    # Start both frontend and backend
 npm run dev:frontend          # Start frontend only
@@ -126,6 +146,7 @@ npm run format:check          # Check code formatting
 ```
 
 ### Docker Commands
+
 ```bash
 npm run docker:dev            # Start development containers
 npm run docker:dev:down       # Stop development containers
@@ -136,6 +157,7 @@ npm run docker:down           # Stop production containers
 ```
 
 ### Backend Commands
+
 ```bash
 cd backend
 npm run dev                   # Start development server
@@ -147,6 +169,7 @@ npm run db:studio             # Open Prisma Studio (local only)
 ```
 
 ### Frontend Commands
+
 ```bash
 cd frontend
 npm run dev                   # Start development server
@@ -160,6 +183,7 @@ npm run lint                  # Run ESLint
 The application uses PostgreSQL with Prisma ORM. The database is automatically set up when using Docker.
 
 ### Manual Database Setup
+
 1. Install PostgreSQL
 2. Create a database named `audiostack`
 3. Update `backend/.env` with your database credentials
@@ -169,8 +193,6 @@ The application uses PostgreSQL with Prisma ORM. The database is automatically s
    npm run db:generate
    npm run db:migrate
    ```
-
-
 
 ## 📁 Project Structure
 
@@ -198,8 +220,6 @@ audiostack/
 └── package.json            # Root package.json
 ```
 
-
-
 ## 🎵 Audio Features
 
 - **Supported Formats**: MP3, WAV, OGG, MP4, AAC, FLAC, WebM
@@ -211,11 +231,13 @@ audiostack/
 ## 🐳 Docker Deployment
 
 ### Development
+
 ```bash
 npm run start-dev
 ```
 
 ### Production
+
 ```bash
 docker-compose up -d
 ```
@@ -228,6 +250,4 @@ docker-compose up -d
 4. Run tests and linting
 5. Submit a pull request
 
- 
-
-**AudioStack** - Your personal audio library, simplified! 🎵✨ 
+**AudioStack** - Your personal audio library, simplified! 🎵✨

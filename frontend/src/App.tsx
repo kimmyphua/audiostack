@@ -10,15 +10,15 @@ import Dashboard from './pages/dashboard/Dashboard';
 import Login from './pages/login/Login';
 import Register from './pages/login/Register';
 import Profile from './pages/profile/Profile';
+import Spinner from './components/Spinner';
 
 function App() {
   const { user, loading } = useAuth();
 
-  // Show loading spinner only when we're actually checking auth
   if (loading) {
     return (
       <div className={styles.loadingContainer}>
-        <div className={styles.loadingSpinner}></div>
+        <Spinner size='large' />
       </div>
     );
   }

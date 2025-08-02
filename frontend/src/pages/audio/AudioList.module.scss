@@ -253,9 +253,4 @@
 .loadingContainer {
   @include flex-center;
   height: 16rem;
-
-  .spinner {
-    height: 2rem;
-    width: 2rem;
-  }
 }

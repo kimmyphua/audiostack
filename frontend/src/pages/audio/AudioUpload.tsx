@@ -113,6 +113,7 @@ export default function AudioUpload() {
             type='button'
             onClick={() => window.history.back()}
             className='btn-secondary'
+            disabled={isUploading}
           >
             Cancel
           </button>

@@ -145,7 +145,7 @@ export default function Profile() {
               }
               handleDelete();
             }}
-            disabled={isDeleting}
+            disabled={isDeleting || updateUserLoading}
             className={styles.deleteButton}
           >
             {isDeleting ? 'Deleting...' : 'Delete Account'}

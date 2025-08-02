@@ -89,13 +89,6 @@ $transition-colors:
   flex-direction: column;
 }
 
-@mixin absolute-center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
 @mixin focus-ring {
   outline: 2px solid $primary-500;
   outline-offset: 2px;
@@ -176,18 +169,4 @@ $transition-colors:
   box-shadow: $shadow-sm;
   border: 1px solid $gray-200;
   padding: $spacing-6;
-}
-
-// Loading spinner
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.spinner {
-  animation: spin 1s linear infinite;
-  border: 2px solid $gray-300;
-  border-top-color: $primary-600;
-  border-radius: 50%;
 }

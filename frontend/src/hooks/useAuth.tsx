@@ -34,6 +34,5 @@ export function useAuth() {
     queryClient.clear();
   };
 
-  console.log('user', user);
   return { user, loading, logout };
 }
