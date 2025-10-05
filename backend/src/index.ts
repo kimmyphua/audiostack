@@ -13,6 +13,7 @@ import { authenticateToken } from './middleware/auth';
 import audioRoutes from './routes/audio';
 import authRoutes from './routes/auth';
 import userRoutes from './routes/users';
+import redis from './utils/redis';
 
 // Load environment variables
 dotenv.config();
@@ -80,8 +81,38 @@ app.use('/api/users', userRoutes);
 app.use('/api/audio', audioRoutes);
 
 // Health check endpoint
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', timestamp: new Date().toISOString() });
+app.get('/api/health', async (req, res) => {
+  try {
+    // Check database connection
+    await prisma.$queryRaw`SELECT 1`;
+    const dbStatus = 'connected';
+    
+    // Check Redis connection
+    let redisStatus = 'disconnected';
+    try {
+      await redis.ping();
+      redisStatus = 'connected';
+    } catch (error) {
+      console.warn('Redis health check failed:', error);
+    }
+    
+    const status = dbStatus === 'connected' && redisStatus === 'connected' ? 'OK' : 'DEGRADED';
+    
+    res.json({ 
+      status, 
+      timestamp: new Date().toISOString(),
+      services: {
+        database: dbStatus,
+        redis: redisStatus
+      }
+    });
+  } catch (error) {
+    res.status(503).json({ 
+      status: 'ERROR', 
+      timestamp: new Date().toISOString(),
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
 });
 
 // Error handling middleware
