@@ -4,9 +4,9 @@ import toast from 'react-hot-toast';
 import { useMutation } from 'react-query';
 import { Link, useNavigate } from 'react-router-dom';
 import { Icon } from '../../components/Icon';
+import { useAuth } from '../../hooks/useAuth';
 import getErrorMessages from '../../utils/getErrorMessages';
 import styles from './Register.module.scss';
-import { useAuth } from '../../hooks/useAuth';
 
 export default function Register() {
   const [username, setUsername] = useState('');
@@ -144,6 +144,18 @@ export default function Register() {
             {registerLoading ? 'Creating account...' : 'Create account'}
           </button>
         </form>
+        
+        <div className={styles.githubSection}>
+          <a
+            href='https://github.com/kimmyphua'
+            target='_blank'
+            rel='noopener noreferrer'
+            className={styles.githubLink}
+          >
+            <Icon name='Github' className={styles.githubIcon} />
+            Made by kimmyphua
+          </a>
+        </div>
       </div>
     </div>
   );

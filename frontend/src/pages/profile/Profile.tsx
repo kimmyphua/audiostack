@@ -3,9 +3,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from 'react-query';
 import { Icon } from '../../components/Icon';
-import { API_ENDPOINTS } from '../../constants';
 import { useAuth } from '../../hooks/useAuth';
-import { authStorage } from '../../utils/apiHelpers';
 import getErrorMessages from '../../utils/getErrorMessages';
 import styles from './Profile.module.scss';
 

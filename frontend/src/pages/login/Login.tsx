@@ -137,6 +137,18 @@ export default function Login() {
             </p>
           </div>
         </form>
+        
+        <div className={styles.githubSection}>
+          <a
+            href='https://github.com/kimmyphua'
+            target='_blank'
+            rel='noopener noreferrer'
+            className={styles.githubLink}
+          >
+            <Icon name='Github' className={styles.githubIcon} />
+            Made by kimmyphua
+          </a>
+        </div>
       </div>
     </div>
   );

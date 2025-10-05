@@ -122,6 +122,35 @@
   padding: $spacing-2 $spacing-4;
 }
 
+.githubSection {
+  margin-top: $spacing-6;
+  text-align: center;
+  padding-top: $spacing-4;
+  border-top: 1px solid $gray-200;
+
+  .githubLink {
+    @include flex-center;
+    gap: $spacing-2;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: $gray-600;
+    text-decoration: none;
+    padding: $spacing-2;
+    border-radius: $border-radius;
+    transition: all 0.2s ease;
+
+    &:hover {
+      color: $gray-900;
+      background-color: $gray-50;
+    }
+
+    .githubIcon {
+      height: 1rem;
+      width: 1rem;
+    }
+  }
+}
+
 .errorMessage {
   margin-top: $spacing-1;
   font-size: 0.875rem;

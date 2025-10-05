@@ -16,11 +16,13 @@ A full-stack audio file hosting web application built with React, Node.js, and T
 - 🎵 **Audio File Upload** - Support for multiple audio formats (MP3, WAV, OGG, MP4, AAC, FLAC, WebM)
 - 📁 **File Management** - Organize files with categories and descriptions
 - 🎧 **Audio Player** - Built-in player with playback controls
-- 🔐 **User Authentication** - JWT-based authentication system
+- 🔐 **User Authentication** - JWT-based authentication with refresh tokens
 - 📱 **Responsive Design** - Works on desktop and mobile devices
 - 🔍 **Search & Filter** - Find files by category or search terms
 - 🗄️ **Database Storage** - PostgreSQL with Prisma ORM
+- 🚀 **Redis Integration** - Token management and session storage
 - 🐳 **Docker Support** - Easy deployment with Docker Compose
+- ☁️ **Cloud Deployment** - Ready for Railway and Vercel
 
 ## 🛠️ Tech Stack
 
@@ -43,7 +45,8 @@ A full-stack audio file hosting web application built with React, Node.js, and T
 - **TypeScript** - Type safety
 - **Prisma** - Database ORM
 - **PostgreSQL** - Database
-- **JWT** - Authentication
+- **Redis** - Token management and caching
+- **JWT** - Authentication with access/refresh tokens
 - **Multer** - File upload handling
 - **bcryptjs** - Password hashing
 - **Express Validator** - Input validation
@@ -56,6 +59,8 @@ A full-stack audio file hosting web application built with React, Node.js, and T
 
 - **Docker** - Containerization
 - **Docker Compose** - Multi-container orchestration
+- **Railway** - Cloud deployment platform
+- **Vercel** - Frontend hosting
 - **Nodemon** - Development auto-restart
 
 ## 🚀 Quick Start
@@ -163,9 +168,10 @@ cd backend
 npm run dev                   # Start development server
 npm run build                 # Build TypeScript
 npm run start                 # Start production server
-npm run db:migrate            # Run database migrations (local only)
-npm run db:generate           # Generate Prisma client (local only)
-npm run db:studio             # Open Prisma Studio (local only)
+npm run db:migrate            # Run database migrations
+npm run db:generate           # Generate Prisma client
+npm run db:studio             # Open Prisma Studio
+npm run db:push               # Push schema changes to database
 ```
 
 ### Frontend Commands
