@@ -72,6 +72,9 @@ export const API_ENDPOINTS = {
     LOGIN: '/auth/login',
     REGISTER: '/auth/register',
     ME: '/auth/me',
+    LOGOUT: '/auth/logout',
+    LOGOUT_ALL: '/auth/logout-all',
+    REFRESH: '/auth/refresh',
   },
   USERS: {
     PROFILE: (id: string) => `/users/${id}`,

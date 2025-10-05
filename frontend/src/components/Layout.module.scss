@@ -99,6 +99,29 @@
     }
   }
 
+  .githubLink {
+    @include flex-center;
+    width: 100%;
+    margin-top: $spacing-3;
+    padding: $spacing-2;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: $gray-600;
+    border-radius: $border-radius;
+    text-decoration: none;
+
+    &:hover {
+      background-color: $gray-50;
+      color: $gray-900;
+    }
+
+    .icon {
+      margin-right: $spacing-3;
+      height: 1.25rem;
+      width: 1.25rem;
+    }
+  }
+
   .logoutButton {
     @include flex-center;
     width: 100%;
@@ -185,6 +208,29 @@
         font-weight: 500;
         color: $gray-700;
       }
+    }
+  }
+
+  .githubLink {
+    @include flex-center;
+    width: 100%;
+    margin-top: $spacing-3;
+    padding: $spacing-2;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: $gray-600;
+    border-radius: $border-radius;
+    text-decoration: none;
+
+    &:hover {
+      background-color: $gray-50;
+      color: $gray-900;
+    }
+
+    .icon {
+      margin-right: $spacing-3;
+      height: 1.25rem;
+      width: 1.25rem;
     }
   }
 

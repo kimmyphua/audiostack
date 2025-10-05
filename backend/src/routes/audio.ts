@@ -3,7 +3,7 @@ import { Request, Response, Router } from 'express';
 import { body } from 'express-validator';
 import fs from 'fs';
 import { authenticateToken, AuthRequest } from '../middleware/auth';
-import { upload, handleUploadError } from '../middleware/upload';
+import { handleUploadError, upload } from '../middleware/upload';
 import { ErrorResponses, handleValidationErrors } from '../utils/errorHandler';
 
 const router = Router();
@@ -282,61 +282,56 @@ router.get('/categories/list', (req: Request, res: Response) => {
 });
 
 // Direct file serving for audio playback
-router.get('/:id/file', async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    console.log('File endpoint called for ID:', id);
+router.get(
+  '/:id/file',
+  authenticateToken,
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const { id } = req.params;
+      const userId = req.user!.id;
 
-    // Get token from query parameter
-    const queryToken = req.query.token as string;
+      console.log('File endpoint called for ID:', id, 'by user:', userId);
 
-    if (!queryToken) {
-      return res.status(401).json(ErrorResponses.authenticationRequired());
+      const audioFile = await prisma.audioFile.findFirst({
+        where: { id, userId },
+      });
+
+      if (!audioFile) {
+        return res.status(404).json(ErrorResponses.notFound('Audio file'));
+      }
+
+      console.log('Audio file found:', audioFile.filename);
+      const filePath = audioFile.filePath;
+
+      if (!fs.existsSync(filePath)) {
+        return res.status(404).json(ErrorResponses.notFound('File'));
+      }
+
+      const fileSize = fs.statSync(filePath).size;
+
+      // Serve the file directly with proper headers
+      res.setHeader('Content-Type', audioFile.mimeType);
+      res.setHeader('Content-Length', fileSize);
+      res.setHeader('Accept-Ranges', 'bytes');
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable'); // Prevent caching for security
+
+      console.log('Headers set, starting file stream...');
+
+      // Stream the file
+      const fileStream = fs.createReadStream(filePath);
+      fileStream.on('error', error => {
+        console.error('File stream error:', error);
+      });
+      fileStream.on('end', () => {
+        console.log('File stream completed');
+      });
+      fileStream.pipe(res);
+    } catch (error) {
+      console.error('Direct file serving error:', error);
+      res.status(500).json(ErrorResponses.internalServerError());
     }
-
-    // Verify token and get user
-    const jwt = require('jsonwebtoken');
-    const decoded = jwt.verify(queryToken, process.env.JWT_SECRET!) as any;
-    const userId = decoded.userId;
-    console.log('User ID from token:', userId);
-
-    const audioFile = await prisma.audioFile.findFirst({
-      where: { id, userId },
-    });
-
-    if (!audioFile) {
-      return res.status(404).json(ErrorResponses.notFound('Audio file'));
-    }
-
-    console.log('Audio file found:', audioFile.filename);
-    const filePath = audioFile.filePath;
-
-    if (!fs.existsSync(filePath)) {
-      return res.status(404).json(ErrorResponses.notFound('File'));
-    }
-
-    const fileSize = fs.statSync(filePath).size;
-    // Serve the file directly with proper headers
-    res.setHeader('Content-Type', audioFile.mimeType);
-    res.setHeader('Content-Length', fileSize);
-    res.setHeader('Accept-Ranges', 'bytes');
-    res.setHeader('Access-Control-Allow-Origin', '*');
-
-    console.log('Headers set, starting file stream...');
-
-    // Stream the file
-    const fileStream = fs.createReadStream(filePath);
-    fileStream.on('error', error => {
-      console.error('File stream error:', error);
-    });
-    fileStream.on('end', () => {
-      console.log('File stream completed');
-    });
-    fileStream.pipe(res);
-  } catch (error) {
-    console.error('Direct file serving error:', error);
-    res.status(500).json(ErrorResponses.internalServerError());
   }
-});
+);
 
 export default router;

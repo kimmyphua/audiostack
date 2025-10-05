@@ -1,16 +1,16 @@
 import { ArrowLeft, Edit, Pause, Play, Trash2, Volume2 } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { useQuery } from 'react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Spinner from '../../components/Spinner';
 import { audioAPI } from '../../lib/api';
 import { AudioFile } from '../../types';
-import { getStreamUrl } from '../../utils/audioFileHelpers';
+import { getAudioBlobUrl } from '../../utils/audioFileHelpers';
 import { formatFileSize, formatTime } from '../../utils/formatters';
 import styles from './AudioPlayer.module.scss';
 import { useAudioFiles } from './hooks/useAudioFiles';
 import { useAudioPlayer } from './hooks/useAudioPlayer';
-import { useQuery } from 'react-query';
 
 export default function AudioPlayer() {
   const { id } = useParams<{ id: string }>();
@@ -37,17 +37,13 @@ export default function AudioPlayer() {
     },
     enabled: !!id,
     onSuccess: async () => {
-      const fileUrl = getStreamUrl(id!);
-
-      const audioResponse = await fetch(fileUrl);
-      if (!audioResponse.ok) {
-        throw new Error(`HTTP error! status: ${audioResponse.status}`);
+      try {
+        const blobUrl = await getAudioBlobUrl(id!);
+        setAudioUrl(blobUrl);
+      } catch (error) {
+        console.error('Error loading audio file:', error);
+        toast.error('Failed to load audio file');
       }
-      const audioBlob = await audioResponse.blob();
-      const blobUrl = URL.createObjectURL(audioBlob);
-      console.log('Blob URL created:', blobUrl);
-
-      setAudioUrl(blobUrl);
     },
     onError: (error: any) => {
       toast.error(`Failed to load audio file: ${error.response?.data?.error}`);
@@ -146,7 +142,7 @@ export default function AudioPlayer() {
           <div className={styles.audioPlayer}>
             <audio
               ref={audioRef}
-              src={audioUrl || getStreamUrl(id!)}
+              src={audioUrl || ''}
               onTimeUpdate={handleTimeUpdate}
               onLoadedMetadata={handleLoadedMetadata}
               onEnded={handleEnded}

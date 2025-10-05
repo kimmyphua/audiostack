@@ -1,19 +1,17 @@
 import { AxiosError } from 'axios';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { useMutation, useQueryClient } from 'react-query';
 import { Icon } from '../../components/Icon';
 import { API_ENDPOINTS } from '../../constants';
 import { useAuth } from '../../hooks/useAuth';
-import { storage } from '../../utils/apiHelpers';
+import { authStorage } from '../../utils/apiHelpers';
 import getErrorMessages from '../../utils/getErrorMessages';
 import styles from './Profile.module.scss';
-import { useMutation, useQueryClient } from 'react-query';
-import { User } from '../../types';
-import { api } from '../../lib/api';
 
 export default function Profile() {
   const queryClient = useQueryClient();
-  const { user, logout } = useAuth();
+  const { user, logout, updateProfile, deleteUser } = useAuth();
 
   const [username, setUsername] = useState(user?.username || '');
   const [email, setEmail] = useState(user?.email || '');
@@ -22,21 +20,17 @@ export default function Profile() {
   const [showPassword, setShowPassword] = useState(false);
 
   const { mutate: updateUser, isLoading: updateUserLoading } = useMutation(
-    async (data: Partial<User>) => {
+    async (data: { username: string; email: string; password?: string }) => {
       if (!user) {
         throw new Error('No user logged in');
       }
-      const response = await api.put(
-        API_ENDPOINTS.USERS.PROFILE(user.id),
-        data
-      );
-      return response.data.user;
+      return await updateProfile(user.id, data);
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(['user']);
         toast.success('Profile updated successfully!');
         setPassword(''); // Clear password field after successful update
+        setErrors(null);
       },
       onError: (error: any) => {
         console.error('Update user error:', error);
@@ -47,11 +41,7 @@ export default function Profile() {
 
   const { mutate: handleDelete, isLoading: isDeleting } = useMutation(
     async () => {
-      const token = storage.get('token');
-      await fetch(API_ENDPOINTS.USERS.PROFILE(user?.id || ''), {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await deleteUser(user.id);
     },
     {
       onSuccess: () => {

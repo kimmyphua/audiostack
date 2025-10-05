@@ -1,14 +1,13 @@
 import { AxiosError } from 'axios';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { useMutation } from 'react-query';
 import { Link, useNavigate } from 'react-router-dom';
 import { Icon } from '../../components/Icon';
-import { API_ENDPOINTS, DEFAULT_CREDENTIALS } from '../../constants';
+import { DEFAULT_CREDENTIALS } from '../../constants';
+import { useAuth } from '../../hooks/useAuth';
 import getErrorMessages from '../../utils/getErrorMessages';
 import styles from './Login.module.scss';
-import { storage } from '../../utils/apiHelpers';
-import { api } from '../../lib/api';
-import { useMutation, useQueryClient } from 'react-query';
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -16,31 +15,19 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const [errors, setErrors] = useState<Record<string, string> | null>(null);
-  const queryClient = useQueryClient();
+
+  const { login } = useAuth();
 
   const {
-    mutate: login,
+    mutate: handleLogin,
     isLoading: loginLoading,
     reset: clearErrors,
   } = useMutation(
     async ({ username, password }: { username: string; password: string }) => {
-      const response = await api.post(API_ENDPOINTS.AUTH.LOGIN, {
-        username,
-        password,
-      });
-      const { token, user } = response.data;
-
-      if (!token) {
-        throw new Error('No token received from server');
-      }
-
-      storage.set('token', token);
-      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      return { token, user };
+      return await login({ username, password });
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(['user']);
         toast.success('Login successful!');
         navigate('/dashboard');
       },
@@ -51,6 +38,17 @@ export default function Login() {
       },
     }
   );
+
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!username || !password) {
+      setErrors({ general: 'Please fill in all fields' });
+      return;
+    }
+
+    handleLogin({ username, password });
+  };
 
   return (
     <div className={styles.container}>
@@ -68,7 +66,7 @@ export default function Login() {
           </p>
         </div>
 
-        <form className={styles.form}>
+        <form className={styles.form} onSubmit={onSubmit}>
           <div className={styles.inputGroup}>
             <input
               id='username'
@@ -81,7 +79,7 @@ export default function Login() {
               onChange={e => {
                 setUsername(e.target.value);
                 if (errors?.username) {
-                  clearErrors?.();
+                  clearErrors();
                   setErrors(null);
                 }
               }}
@@ -101,7 +99,7 @@ export default function Login() {
                 onChange={e => {
                   setPassword(e.target.value);
                   if (errors?.password) {
-                    clearErrors?.();
+                    clearErrors();
                     setErrors(null);
                   }
                 }}
@@ -120,8 +118,11 @@ export default function Login() {
             )}
           </div>
 
+          {errors?.general && (
+            <div className={styles.errorMessage}>{errors.general}</div>
+          )}
+
           <button
-            onClick={() => login({ username, password })}
             type='submit'
             disabled={loginLoading}
             className={styles.submitButton}

@@ -2,6 +2,7 @@ import {
   ArrowLeft,
   Eye,
   EyeOff,
+  Github,
   Home,
   LogOut,
   Menu,
@@ -33,6 +34,7 @@ const iconMap: IconMap = {
   Pause,
   Play,
   Volume2,
+  Github,
 };
 
 interface IconProps {

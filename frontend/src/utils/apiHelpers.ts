@@ -12,34 +12,34 @@ export const getApiBaseUrl = (): string => {
   return 'http://localhost:5001/api';
 };
 
-// Local storage helpers
-export const storage = {
-  get: (key: string): string | null => {
-    try {
-      return localStorage.getItem(key);
-    } catch {
-      return null;
-    }
+// Local storage helpers (for backward compatibility)
+export const authStorage = {
+  // Access token (short-lived, stored in sessionStorage)
+  getAccessToken: (): string | null => {
+    return localStorage.getItem('accessToken');
   },
-  set: (key: string, value: string): void => {
-    try {
-      localStorage.setItem(key, value);
-    } catch {
-      // Handle storage errors silently
-    }
+  setAccessToken: (token: string): void => {
+    localStorage.setItem('accessToken', token);
   },
-  remove: (key: string): void => {
-    try {
-      localStorage.removeItem(key);
-    } catch {
-      // Handle storage errors silently
-    }
+  removeAccessToken: (): void => {
+    localStorage.removeItem('accessToken');
   },
+
+  // User data (stored in sessionStorage)
+  getUser: (): any => {
+    const userData = localStorage.getItem('user');
+    return userData ? JSON.parse(userData) : null;
+  },
+  setUser: (user: any): void => {
+    localStorage.setItem('user', JSON.stringify(user));
+  },
+  removeUser: (): void => {
+    localStorage.removeItem('user');
+  },
+
+  // Clear all auth data
   clear: (): void => {
-    try {
-      localStorage.clear();
-    } catch {
-      // Handle storage errors silently
-    }
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('user');
   },
 };

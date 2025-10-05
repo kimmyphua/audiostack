@@ -15,16 +15,32 @@ services:
     networks:
       - audiostack-network
 
+  redis:
+    image: redis:7-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - audiostack-network
+
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile.dev
     depends_on:
       - db
+      - redis
     environment:
       DATABASE_URL: postgres://postgres:password@db:5432/audiostack?schema=public
+      REDIS_URL: redis://redis:6379
+      REDIS_PASSWORD: ''
+      REDIS_TLS_ENABLED: 'false'
       JWT_SECRET: your-super-secret-jwt-key-change-this-in-production
-      JWT_EXPIRES_IN: 24h
+      REFRESH_TOKEN_SECRET: your-super-secret-refresh-token-key-change-this-in-production
+      JWT_EXPIRES_IN: 15m
       UPLOAD_DIR: uploads
       MAX_FILE_SIZE: 104857600
       DEFAULT_ADMIN_USERNAME: admin
@@ -65,6 +81,7 @@ services:
 
 volumes:
   db_data:
+  redis_data:
 
 networks:
   audiostack-network:

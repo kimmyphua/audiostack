@@ -11,14 +11,28 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
 
+  redis:
+    image: redis:7-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+
   backend:
     build: ./backend
     depends_on:
       - db
+      - redis
     environment:
       DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      REDIS_TLS_ENABLED: ${REDIS_TLS_ENABLED:-false}
       JWT_SECRET: ${JWT_SECRET}
-      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-24h}
+      REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-15m}
       UPLOAD_DIR: ${UPLOAD_DIR:-uploads}
       MAX_FILE_SIZE: ${MAX_FILE_SIZE:-26214400}
       DEFAULT_ADMIN_USERNAME: ${DEFAULT_ADMIN_USERNAME:-admin}
@@ -34,7 +48,7 @@ services:
       [
         'sh',
         '-c',
-        'npx prisma generate && npx prisma db push && node dist/index.js',
+        'npx prisma generate && npx prisma migrate deploy && node dist/index.js',
       ]
 
   frontend:
@@ -50,3 +64,4 @@ services:
 
 volumes:
   db_data:
+  redis_data:

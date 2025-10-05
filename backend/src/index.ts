@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
@@ -25,7 +26,7 @@ app.set('trust proxy', 1);
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  max: 500, // limit each IP to 100 requests per windowMs
 });
 
 // Middleware
@@ -56,6 +57,9 @@ app.use(morgan('combined'));
 
 // Handle preflight requests
 app.options('*', cors());
+
+// Cookie parser middleware
+app.use(cookieParser());
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
@@ -132,6 +136,7 @@ async function startServer() {
           username: process.env.DEFAULT_ADMIN_USERNAME || 'admin',
           password: hashedPassword,
           email: 'admin@audiostack.com',
+          tokenVersion: 1,
         },
       });
       console.log('✅ Default admin user created');

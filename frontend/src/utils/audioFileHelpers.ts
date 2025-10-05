@@ -1,11 +1,31 @@
-import { getApiBaseUrl } from './apiHelpers';
+import { authStorage, getApiBaseUrl } from './apiHelpers';
 
-// Get API base URL for streaming
-export const getStreamUrl = (id: string): string => {
-  const token = localStorage.getItem('token');
-  const baseUrl = `${getApiBaseUrl()}/audio/${id}/file`;
-  console.log('baseUrl', baseUrl);
-  return `${baseUrl}?token=${token}`;
+// Fetch audio file with authentication and return blob URL
+export const getAudioBlobUrl = async (id: string): Promise<string> => {
+  try {
+    // Use the authenticated API client to fetch the audio file
+    const fileUrl = `${getApiBaseUrl()}/audio/${id}/file`;
+
+    // Fetch the audio file with proper authentication
+    const audioResponse = await fetch(fileUrl, {
+      headers: {
+        Authorization: `Bearer ${authStorage.getAccessToken() || ''}`,
+      },
+    });
+
+    if (!audioResponse.ok) {
+      throw new Error(`HTTP error! status: ${audioResponse.status}`);
+    }
+
+    const audioBlob = await audioResponse.blob();
+    const blobUrl = URL.createObjectURL(audioBlob);
+    console.log('Blob URL created:', blobUrl);
+
+    return blobUrl;
+  } catch (error) {
+    console.error('Error fetching audio file:', error);
+    throw error;
+  }
 };
 
 // Validate file size

@@ -11,13 +11,14 @@ datasource db {
 }
 
 model User {
-  id        String      @id @default(cuid())
-  username  String      @unique
-  password  String
-  email     String      @unique
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-  audioFiles AudioFile[]
+  id           String      @id @default(cuid())
+  username     String      @unique
+  password     String
+  email        String      @unique
+  tokenVersion Int         @default(1)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  audioFiles   AudioFile[]
 
   @@map("users")
 }

@@ -6,9 +6,60 @@ import { getInitials } from '../utils/formatters';
 import { Icon } from './Icon';
 import styles from './Layout.module.scss';
 
-export default function Layout() {
-  const { user, logout } = useAuth();
+// User Info Component
+function UserInfo() {
+  const { user } = useAuth();
 
+  return (
+    <div className={styles.userInfo}>
+      <div className={styles.avatar}>
+        <div className={styles.avatarCircle}>
+          <span className={styles.avatarText}>
+            {getInitials(user?.username || '')}
+          </span>
+        </div>
+      </div>
+      <div className={styles.userDetails}>
+        <p className={styles.username}>{user?.username}</p>
+      </div>
+    </div>
+  );
+}
+
+// User Actions Component (GitHub link and logout button)
+function UserActions({ onCloseSidebar }: { onCloseSidebar?: () => void }) {
+  const { logout } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      // Close mobile sidebar if provided
+      onCloseSidebar?.();
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
+
+  return (
+    <>
+      <button onClick={handleLogout} className={styles.logoutButton}>
+        <Icon name='LogOut' className={styles.icon} />
+        Logout
+      </button>
+      <a
+        href='https://github.com/kimmyphua'
+        target='_blank'
+        rel='noopener noreferrer'
+        className={styles.githubLink}
+      >
+        <Icon name='Github' className={styles.icon} />
+        Made by kimmyphua
+      </a>
+    </>
+  );
+}
+
+export default function Layout() {
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -45,22 +96,8 @@ export default function Layout() {
             </div>
           </nav>
           <div className={styles.mobileUserSection}>
-            <div className={styles.userInfo}>
-              <div className={styles.avatar}>
-                <div className={styles.avatarCircle}>
-                  <span className={styles.avatarText}>
-                    {getInitials(user?.username || '')}
-                  </span>
-                </div>
-              </div>
-              <div className={styles.userDetails}>
-                <p className={styles.username}>{user?.username}</p>
-              </div>
-            </div>
-            <button onClick={logout} className={styles.logoutButton}>
-              <Icon name='LogOut' className={styles.icon} />
-              Logout
-            </button>
+            <UserInfo />
+            <UserActions onCloseSidebar={() => setSidebarOpen(false)} />
           </div>
         </div>
       </div>
@@ -88,22 +125,8 @@ export default function Layout() {
           </div>
         </nav>
         <div className={styles.desktopUserSection}>
-          <div className={styles.userInfo}>
-            <div className={styles.avatar}>
-              <div className={styles.avatarCircle}>
-                <span className={styles.avatarText}>
-                  {getInitials(user?.username || '')}
-                </span>
-              </div>
-            </div>
-            <div className={styles.userDetails}>
-              <p className={styles.username}>{user?.username}</p>
-            </div>
-          </div>
-          <button onClick={logout} className={styles.logoutButton}>
-            <Icon name='LogOut' className={styles.icon} />
-            Logout
-          </button>
+          <UserInfo />
+          <UserActions />
         </div>
       </div>
 

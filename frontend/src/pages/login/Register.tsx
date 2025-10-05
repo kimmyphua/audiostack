@@ -1,22 +1,19 @@
 import { AxiosError } from 'axios';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { useMutation } from 'react-query';
 import { Link, useNavigate } from 'react-router-dom';
 import { Icon } from '../../components/Icon';
 import getErrorMessages from '../../utils/getErrorMessages';
 import styles from './Register.module.scss';
-import { useMutation, useQueryClient } from 'react-query';
-import { API_ENDPOINTS } from '../../constants';
-import { api } from '../../lib/api';
-import { storage } from '../../utils/apiHelpers';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function Register() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const queryClient = useQueryClient();
-
+  const { registerUser } = useAuth();
   const navigate = useNavigate();
   const [errors, setErrors] = useState<Record<string, string> | null>(null);
   const {
@@ -33,24 +30,10 @@ export default function Register() {
       password: string;
       email: string;
     }) => {
-      const response = await api.post(API_ENDPOINTS.AUTH.REGISTER, {
-        username,
-        password,
-        email,
-      });
-      const { token, user } = response.data;
-
-      if (!token) {
-        throw new Error('No token received from server');
-      }
-
-      storage.set('token', token);
-      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      return { token, user };
+      return await registerUser({ username, password, email });
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(['user']);
         toast.success(`Registration successful! Welcome ${username} 🥳`);
         navigate('/dashboard');
       },
